@@ -119,6 +119,7 @@ return require('packer').startup({ function(use)
             "rcarriga/nvim-notify",
         }
     }
+    use {'akinsho/toggleterm.nvim', tag = '*'}
 end,
     config = {
         display = {
