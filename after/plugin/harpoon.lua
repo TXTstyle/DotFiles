@@ -14,8 +14,3 @@ vim.keymap.set("n", "<Leader>1", function() ui.nav_file(1) end)
 vim.keymap.set("n", "<Leader>2", function() ui.nav_file(2) end)
 vim.keymap.set("n", "<Leader>3", function() ui.nav_file(3) end)
 vim.keymap.set("n", "<Leader>4", function() ui.nav_file(4) end)
-
-
-
-vim.keymap.set("n", "<Leader>tt", function() term.gotoTerminal(1)end)
-
