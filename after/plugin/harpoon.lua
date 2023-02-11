@@ -1,6 +1,5 @@
 local mark = require('harpoon.mark')
 local ui = require('harpoon.ui')
-local term = require('harpoon.term')
 
 vim.keymap.set("n", "<Leader>a", mark.add_file)
 vim.keymap.set("n", "<Leader>r", mark.rm_file)
