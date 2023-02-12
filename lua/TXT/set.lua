@@ -4,6 +4,8 @@ vim.opt.relativenumber = true
 vim.o.timeout = true
 vim.o.timeoutlen = 700
 
+vim.o.encoding = 'utf-8'
+vim.o.fileencoding = 'utf-8'
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4

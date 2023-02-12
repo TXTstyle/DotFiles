@@ -1,9 +1,10 @@
 return {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    lazy = false,
     opts = {
         -- A list of parser names, or "all" (the four listed parsers should always be installed)
-        ensure_installed = { "rust", "javascript", "cpp", "c", "lua", "vim", "help" },
+        ensure_installed = { "rust", "javascript", "cpp", "c", "vue", "lua", "vim", "help" },
 
         -- Install parsers synchronously (only applied to `ensure_installed`)
         sync_install = false,
