@@ -67,7 +67,7 @@ return {
             'rust_analyzer',
             'pylsp',
             'clangd',
-            'sumneko_lua',
+            'lua_ls',
             'csharp_ls',
             'cssls',
             'bashls',
@@ -81,7 +81,7 @@ return {
 
 
         -- Fix Undefined global 'vim'
-        lsp.configure('sumneko_lua', {
+        lsp.configure('lua_ls', {
             settings = {
                 Lua = {
                     diagnostics = {
@@ -252,6 +252,10 @@ return {
             on_attach = function(client, bufnr)
                 client.server_capabilities.document_formatting = true
                 client.server_capabilities.document_range_formatting = true
+                vim.bo.tabstop = 2
+                vim.bo.shiftwidth = 2
+                vim.bo.expandtab = true
+                vim.bo.softtabstop = 2
                 attach(client, bufnr)
             end,
             root_dir = function()
