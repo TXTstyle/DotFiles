@@ -152,12 +152,12 @@ return {
                 fields = { "kind", "abbr", "menu" },
                 format = function(entry, vim_item)
                     vim_item.menu = string.format('%s %s', ({
-                            buffer = "[Buffer]",
-                            nvim_lsp = "[LSP]",
-                            luasnip = "[LuaSnip]",
-                            nvim_lua = "[Lua]",
-                            latex_symbols = "[LaTeX]",
-                        })[entry.source.name], vim_item.kind)
+                        buffer = "[Buffer]",
+                        nvim_lsp = "[LSP]",
+                        luasnip = "[LuaSnip]",
+                        nvim_lua = "[Lua]",
+                        latex_symbols = "[LaTeX]",
+                    })[entry.source.name], vim_item.kind)
                     vim_item.kind = string.format('%s', kind_icons[vim_item.kind])
                     return vim_item
                 end
@@ -258,6 +258,12 @@ return {
                 vim.bo.softtabstop = 2
                 attach(client, bufnr)
             end,
+            filetypes = {'typescript', 'javascript', 'vue', 'json'},
+            init_options = {
+                typescript = {
+                    tsdk = "/usr/lib/node_modules/typescript/lib"
+                }
+            },
             root_dir = function()
                 return vim.loop.cwd()
             end

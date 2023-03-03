@@ -1,5 +1,12 @@
 return {
-    "folke/which-key.nvim",
+    {
+        "folke/which-key.nvim",
+        config = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 500
+            require("which-key").setup()
+        end
+    },
     'ThePrimeagen/harpoon',
     "simrat39/rust-tools.nvim",
     'kevinhwang91/nvim-hlslens',
