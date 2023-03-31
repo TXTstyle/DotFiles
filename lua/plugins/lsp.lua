@@ -30,6 +30,20 @@ return {
             return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
         end
 
+        -- function to toggle "normal" diagnostics or lsp-lines diagnostics.
+        local function toggle_diagnostics()
+            local diagnostics_on = require("lsp_lines").toggle()
+            if diagnostics_on then
+                vim.diagnostic.config({
+                    virtual_text = false,
+                })
+            else
+                vim.diagnostic.config({
+                    virtual_text = { spacing = 4, prefix = "●" },
+                })
+            end
+        end
+
         local kind_icons = {
             Text = "",
             Method = "",
@@ -68,7 +82,7 @@ return {
             'pylsp',
             'clangd',
             'lua_ls',
-            'csharp_ls',
+            'emmet_ls',
             'cssls',
             'bashls',
         })
@@ -207,7 +221,7 @@ return {
                 cmp_autopairs.on_confirm_done()
             )
 
-            vim.keymap.set("n", "<Leader>td", require("lsp_lines").toggle, { desc = "Toggle lsp_lines" })
+            vim.keymap.set("n", "<Leader>td", toggle_diagnostics, { desc = "Toggle lsp_lines" }, opts)
             vim.keymap.set("n", "<Leader>r", function() vim.cmd('ClangdSwitchSourceHeader') end, opts)
             vim.keymap.set("n", "<A-f>", function() vim.lsp.buf.format() end, { buffer = bufnr })
             vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
@@ -258,7 +272,7 @@ return {
                 vim.bo.softtabstop = 2
                 attach(client, bufnr)
             end,
-            filetypes = {'typescript', 'javascript', 'vue', 'json'},
+            filetypes = { 'typescript', 'javascript', 'vue', 'json' },
             init_options = {
                 typescript = {
                     tsdk = "/usr/lib/node_modules/typescript/lib"

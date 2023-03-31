@@ -9,15 +9,9 @@ return {
     },
     'ThePrimeagen/harpoon',
     "simrat39/rust-tools.nvim",
-    'kevinhwang91/nvim-hlslens',
 
     "ThePrimeagen/vim-be-good",
     "levouh/tint.nvim",
-
-    {
-        "SmiteshP/nvim-gps",
-        dependencies = "nvim-treesitter/nvim-treesitter"
-    },
 
     {
         "windwp/nvim-autopairs",
