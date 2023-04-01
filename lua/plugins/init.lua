@@ -33,10 +33,12 @@ return {
     "lukas-reineke/indent-blankline.nvim",
 
 
-    { "petertriho/nvim-scrollbar",
+    {
+        "petertriho/nvim-scrollbar",
         config = function()
             require("scrollbar").setup()
-        end },
+        end
+    },
 
     'mrjones2014/nvim-ts-rainbow',
     {

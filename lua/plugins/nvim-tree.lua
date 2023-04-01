@@ -6,6 +6,7 @@ return {
         { "<leader>b", vim.cmd.NvimTreeToggle, desc = "tree toggle" },
         { "<leader>pv", vim.cmd.NvimTreeFindFile, desc = "tree open file"}
     },
+    lazy = false,
     config = function()
         vim.g.loaded_netrw = 1
         vim.g.loaded_netrwPlugin = 1
