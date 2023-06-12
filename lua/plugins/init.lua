@@ -12,6 +12,8 @@ return {
 
     "ThePrimeagen/vim-be-good",
     "levouh/tint.nvim",
+    "elkowar/yuck.vim",
+    'tikhomirov/vim-glsl',
 
     {
         "windwp/nvim-autopairs",

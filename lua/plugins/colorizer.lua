@@ -3,9 +3,11 @@ return {
     opts = {
         filetypes = {
             "css",
+            "scss",
             "html",
             "vue",
             "javascript",
+            "hex",
         },
         user_default_options = {
             css = true,
