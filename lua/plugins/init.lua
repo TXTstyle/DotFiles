@@ -7,7 +7,6 @@ return {
             require("which-key").setup()
         end
     },
-    'ThePrimeagen/harpoon',
     "simrat39/rust-tools.nvim",
 
     "ThePrimeagen/vim-be-good",

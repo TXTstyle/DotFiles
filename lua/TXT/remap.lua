@@ -1,8 +1,7 @@
-
 vim.keymap.set('t', '<Esc>', "<C-\\><C-n>")
 
 vim.keymap.set('n', '<leader>w', '<cmd>w<cr>')
-vim.keymap.set('n', 'F', '<C-w>w', { silent = true })
+vim.keymap.set('n', '<leader>q', '<C-w>w', { silent = true })
 
 vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv", { silent = true })
 vim.keymap.set("v", "<C-k>", ":m '>-2<CR>gv=gv", { silent = true })
