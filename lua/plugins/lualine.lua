@@ -77,7 +77,7 @@ return {
                         sections = { 'warn' },
                         diagnostics_color = { warn = { bg = c.orange, fg = c.bg } },
                     },
-                    { 'filename', file_status = false,        path = 1 },
+                    -- { 'filename', file_status = false,        path = 1 },
                     { modified,   color = { bg = c.red } },
                     {
                         '%w',

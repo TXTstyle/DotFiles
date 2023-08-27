@@ -1,12 +1,16 @@
 return {
     'navarasu/onedark.nvim',
     priority = 98,
-    -- dependencies = { "levouh/tint.nvim" },
     config = function()
         require('onedark').setup {
             style = 'cool',
+            diagnostics = {
+                background = false,
+            },
+            lualine = {
+                transparent = true
+            }
         }
         require('onedark').load()
-        -- require("tint").refresh()
     end
 }
