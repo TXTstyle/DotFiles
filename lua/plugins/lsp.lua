@@ -72,8 +72,7 @@ return {
             TypeParameter = ""
         }
 
-        local lsp = require('lsp-zero')
-        lsp.preset('recommended')
+        local lsp = require('lsp-zero').preset('recommended')
         lsp.nvim_workspace()
 
         lsp.ensure_installed({
@@ -83,6 +82,7 @@ return {
             'clangd',
             'lua_ls',
             'emmet_ls',
+            'eslint',
             'cssls',
             'bashls',
         })

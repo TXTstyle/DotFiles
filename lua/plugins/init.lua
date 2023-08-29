@@ -13,6 +13,7 @@ return {
     "levouh/tint.nvim",
     "elkowar/yuck.vim",
     'tikhomirov/vim-glsl',
+    "luckasRanarison/tree-sitter-hypr",
 
     {
         "windwp/nvim-autopairs",
@@ -41,7 +42,6 @@ return {
         end
     },
 
-    'mrjones2014/nvim-ts-rainbow',
     {
         "Badhi/nvim-treesitter-cpp-tools",
         dependencies = { "nvim-treesitter/nvim-treesitter" },

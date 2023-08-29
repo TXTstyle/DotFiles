@@ -17,11 +17,6 @@ return {
             highlight = {
                 enable = true,
             },
-            rainbow = {
-                enable = true,
-                extended_mode = true,
-                max_file_lines = nil,
-            },
             indent = {
                 enable = true,
                 disable = {}
@@ -30,6 +25,16 @@ return {
                 enable = true,
             }
 
+        }
+
+        local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+        parser_config.hypr = {
+            install_info = {
+                url = "https://github.com/luckasRanarison/tree-sitter-hypr",
+                files = { "src/parser.c" },
+                branch = "master",
+            },
+            filetype = "hypr",
         }
     end
 }
