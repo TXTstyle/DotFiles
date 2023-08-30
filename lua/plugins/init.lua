@@ -15,10 +15,6 @@ return {
     'tikhomirov/vim-glsl',
     "luckasRanarison/tree-sitter-hypr",
 
-    {
-        "windwp/nvim-autopairs",
-        config = function() require("nvim-autopairs").setup { disable_filetype = { 'Telescope', 'vim' } } end
-    },
     "simrat39/inlay-hints.nvim",
 
 
@@ -42,9 +38,4 @@ return {
         end
     },
 
-    {
-        "Badhi/nvim-treesitter-cpp-tools",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-    },
-    'windwp/nvim-ts-autotag',
 }
