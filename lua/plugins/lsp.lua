@@ -1,219 +1,77 @@
 return {
-    'VonHeikemen/lsp-zero.nvim',
-    lazy = false,
-    priority = 90,
-    dependencies = {
-        -- LSP Support
-        { 'neovim/nvim-lspconfig' },
-        { 'williamboman/mason.nvim' },
-        { 'williamboman/mason-lspconfig.nvim' },
-        { "simrat39/rust-tools.nvim" },
-        { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
+    {
+        'VonHeikemen/lsp-zero.nvim',
+        branch = 'dev-v3',
+        lazy = false,
+        config = false,
+        init = function()
+            -- Disable automatic setup, we are doing it manually
+            vim.g.lsp_zero_extend_cmp = 0
+            vim.g.lsp_zero_extend_lspconfig = 0
 
-        -- Autocompletion
-        { 'hrsh7th/nvim-cmp' },
-        { 'hrsh7th/cmp-buffer' },
-        { 'hrsh7th/cmp-path' },
-        { 'saadparwaiz1/cmp_luasnip' },
-        { 'hrsh7th/cmp-nvim-lsp' },
-        { 'hrsh7th/cmp-nvim-lua' },
-
-        -- Snippets
-        { 'L3MON4D3/LuaSnip' },
-        -- Snippet Collection (Optional)
-        { 'rafamadriz/friendly-snippets' },
-    },
-    config = function()
-        local has_words_before = function()
-            unpack = unpack or table.unpack
-            local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-            return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-        end
-
-        -- function to toggle "normal" diagnostics or lsp-lines diagnostics.
-        local function toggle_diagnostics()
-            local diagnostics_on = require("lsp_lines").toggle()
-            if diagnostics_on then
-                vim.diagnostic.config({
-                    virtual_text = false,
-                })
-            else
-                vim.diagnostic.config({
-                    virtual_text = { spacing = 4, prefix = "●" },
-                })
+            local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+            for type, icon in pairs(signs) do
+                local hl = "DiagnosticSign" .. type
+                vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
             end
-        end
+        end,
+    },
+    {
+        'williamboman/mason.nvim',
+        lazy = false,
+        config = true,
+    },
 
-        local kind_icons = {
-            Text = "",
-            Method = "",
-            Function = "",
-            Constructor = "",
-            Field = "",
-            Variable = "",
-            Class = "ﴯ",
-            Interface = "",
-            Module = "",
-            Property = "ﰠ",
-            Unit = "",
-            Value = "",
-            Enum = "",
-            Keyword = "",
-            Snippet = "",
-            Color = "",
-            File = "",
-            Reference = "",
-            Folder = "",
-            EnumMember = "",
-            Constant = "",
-            Struct = "",
-            Event = "",
-            Operator = "",
-            TypeParameter = ""
-        }
+    -- Autocompletion
+    {
+        'hrsh7th/nvim-cmp',
+        event = 'InsertEnter',
+        dependencies = {
+            { 'L3MON4D3/LuaSnip' },
+            { 'hrsh7th/cmp-buffer' },
+            { 'hrsh7th/cmp-path' },
+            { 'saadparwaiz1/cmp_luasnip' },
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'hrsh7th/cmp-nvim-lua' },
 
-        local lsp = require('lsp-zero').preset('recommended')
-        lsp.nvim_workspace()
-
-        lsp.ensure_installed({
-            'volar',
-            'rust_analyzer',
-            'pylsp',
-            'clangd',
-            'lua_ls',
-            'emmet_ls',
-            'eslint',
-            'cssls',
-            'bashls',
-        })
-
-        lsp.skip_server_setup({ 'rust_analyzer' })
-
-        lsp.set_preferences({
-            configure_diagnostics = true,
-        })
-
-
-        -- Fix Undefined global 'vim'
-        lsp.configure('lua_ls', {
-            settings = {
-                Lua = {
-                    diagnostics = {
-                        globals = { 'vim' }
-                    }
-                }
+        },
+        config = function()
+            local kind_icons = {
+                Text = "",
+                Method = "",
+                Function = "",
+                Constructor = "",
+                Field = "",
+                Variable = "",
+                Class = "ﴯ",
+                Interface = "",
+                Module = "",
+                Property = "ﰠ",
+                Unit = "",
+                Value = "",
+                Enum = "",
+                Keyword = "",
+                Snippet = "",
+                Color = "",
+                File = "",
+                Reference = "",
+                Folder = "",
+                EnumMember = "",
+                Constant = "",
+                Struct = "",
+                Event = "",
+                Operator = "",
+                TypeParameter = ""
             }
-        })
 
-        local luasnip = require("luasnip")
-        local cmp = require("cmp")
-        local select_opts = { behavior = 'select' }
+            -- Here is where you configure the autocompletion settings.
+            local lsp_zero = require('lsp-zero')
+            lsp_zero.extend_cmp()
 
-        lsp.setup_nvim_cmp({
-            mapping = {
-                -- confirm selection
-                ['<CR>'] = cmp.mapping.confirm({ select = false }),
-                ['<C-y>'] = cmp.mapping.confirm({ select = false }),
-
-                -- navigate items on the list
-                ['<Up>'] = cmp.mapping.select_prev_item(select_opts),
-                ['<Down>'] = cmp.mapping.select_next_item(select_opts),
-                ['<C-p>'] = cmp.mapping.select_prev_item(select_opts),
-                ['<C-n>'] = cmp.mapping.select_next_item(select_opts),
-
-                -- scroll up and down in the completion documentation
-                ['<C-f>'] = cmp.mapping.scroll_docs(5),
-                ['<C-u>'] = cmp.mapping.scroll_docs(-5),
-
-                -- toggle completion
-                ['<C-e>'] = cmp.mapping(function(fallback)
-                    if cmp.visible() then
-                        cmp.abort()
-                        fallback()
-                    else
-                        cmp.complete()
-                    end
-                end),
-                -- ... Your other mappings ...
-
-                ["<Tab>"] = cmp.mapping(function(fallback)
-                    if luasnip.expand_or_locally_jumpable() then
-                        luasnip.expand_or_jump()
-                        -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-                        -- they way you will only jump inside the snippet region
-                    elseif cmp.visible() then
-                        cmp.select_next_item()
-                    elseif has_words_before() then
-                        cmp.complete()
-                    else
-                        fallback()
-                    end
-                end, { "i", "s" }),
-
-                ["<S-Tab>"] = cmp.mapping(function(fallback)
-                    if cmp.visible() then
-                        cmp.select_prev_item()
-                    elseif luasnip.jumpable(-1) then
-                        luasnip.jump(-1)
-                    else
-                        fallback()
-                    end
-                end, { "i", "s" }),
-
-                -- ... Your other mappings ...
-            },
-            formatting = {
-                fields = { "kind", "abbr", "menu" },
-                format = function(entry, vim_item)
-                    vim_item.menu = string.format('%s %s', ({
-                        buffer = "[Buffer]",
-                        nvim_lsp = "[LSP]",
-                        luasnip = "[LuaSnip]",
-                        nvim_lua = "[Lua]",
-                        latex_symbols = "[LaTeX]",
-                    })[entry.source.name], vim_item.kind)
-                    vim_item.kind = string.format('%s', kind_icons[vim_item.kind])
-                    return vim_item
-                end
-            }
-        })
-
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-        local lspc = require('lspconfig')
-
-        lspc.html.setup {
-            capabilities = capabilities,
-        }
-
-        lsp.configure('rust_analyzer', {
-            settings = {
-                ['rust-analyzer'] = {
-                    checkOnSave = {
-                        allFeatures = true,
-                        overrideCommand = {
-                            'cargo', 'clippy', '--workspace', '--message-format=json',
-                            '--all-targets', '--all-features'
-                        }
-                    },
-                    tools = {
-                        inlay_hints = {
-                            auto = false
-                        }
-                    },
-                    diagnostics = {
-                        enable = true,
-                        experimental = {
-                            enable = true,
-                        },
-                    },
-                }
-            }
-        })
-
-        local attach = function(client, bufnr)
-            local opts = { buffer = bufnr, remap = false }
+            -- And you can configure cmp even more, if you want to.
+            local cmp = require('cmp')
+            local cmp_action = lsp_zero.cmp_action()
+            local select_opts = { behavior = 'select' }
 
             local cmp_autopairs = require('nvim-autopairs.completion.cmp')
             cmp.event:on(
@@ -221,80 +79,263 @@ return {
                 cmp_autopairs.on_confirm_done()
             )
 
-            vim.keymap.set("n", "<Leader>td", toggle_diagnostics, { desc = "Toggle lsp_lines" }, opts)
-            vim.keymap.set("n", "<Leader>r", function() vim.cmd('ClangdSwitchSourceHeader') end, opts)
-            vim.keymap.set("n", "<A-f>", function() vim.lsp.buf.format() end, opts)
-            vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-            vim.keymap.set("n", "<Leader>d", '<cmd>Telescope lsp_document_symbols<cr>', opts)
-            vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-            -- vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-            vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-            vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-            vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-            vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end,
-                { buffer = bufnr, remap = false, desc = "code_action" })
-            vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end,
-                { buffer = bufnr, remap = false, desc = "references" })
-            vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end,
-                { buffer = bufnr, remap = false, desc = "rename" })
-            vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-        end
+            require('luasnip.loaders.from_vscode').lazy_load()
 
-        lsp.on_attach(function(client, bufnr)
-            attach(client, bufnr)
-        end)
+            cmp.setup({
+                preselect = 'item',
+                completion = {
+                    completeopt = 'menu,menuone,noinsert'
+                },
+                sources = {
+                    { name = 'nvim_lsp' },
+                    { name = 'nvim_lua' },
+                    { name = 'buffer' },
+                    { name = 'path' },
+                    { name = 'luasnip' },
+                },
+                mapping = {
+                    -- confirm selection
+                    ['<CR>'] = cmp.mapping.confirm({ select = true }),
 
-        local rust_lsp = lsp.build_options('rust_analyzer', {})
-        lsp.setup()
+                    -- navigate items on the list
+                    ['<Up>'] = cmp.mapping.select_prev_item(select_opts),
+                    ['<Down>'] = cmp.mapping.select_next_item(select_opts),
+                    ['<C-p>'] = cmp.mapping.select_prev_item(select_opts),
+                    ['<C-n>'] = cmp.mapping.select_next_item(select_opts),
 
-        vim.diagnostic.config({
-            virtual_text = false,
-            signs = true,
-            update_in_insert = true,
-            underline = true,
-            severity_sort = false,
-            float = true,
-        })
+                    -- scroll up and down in the completion documentation
+                    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+                    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
 
-        lspc.emmet_ls.setup({
-            capabilities = capabilities,
-            filetypes = { 'html', 'vue', 'js', 'css', 'scss', 'sass' },
-            root_dir = function()
-                return vim.loop.cwd()
-            end
-        })
-
-        lspc.volar.setup({
-            capabilities = capabilities,
-            on_attach = function(client, bufnr)
-                client.server_capabilities.document_formatting = true
-                client.server_capabilities.document_range_formatting = true
-                vim.bo.tabstop = 2
-                vim.bo.shiftwidth = 2
-                vim.bo.expandtab = true
-                vim.bo.softtabstop = 2
-                attach(client, bufnr)
-            end,
-            filetypes = { 'typescript', 'javascript', 'vue', 'json' },
-            init_options = {
-                typescript = {
-                    tsdk = "/usr/lib/node_modules/typescript/lib"
+                    -- toggle completion
+                    ['<C-e>'] = cmp.mapping(function()
+                        if cmp.visible() then
+                            cmp.abort()
+                        else
+                            cmp.complete()
+                        end
+                    end),
+                    ['<Tab>'] = cmp_action.luasnip_jump_forward(),
+                    ['<S-Tab>'] = cmp_action.luasnip_jump_backward(),
+                },
+                formatting = {
+                    fields = { "kind", "abbr", "menu" },
+                    format = function(entry, vim_item)
+                        vim_item.menu = string.format('%s %s', ({
+                            buffer = "[Buffer]",
+                            path = "[Path]",
+                            nvim_lsp = "[LSP]",
+                            luasnip = "[LuaSnip]",
+                            nvim_lua = "[Lua]",
+                            latex_symbols = "[LaTeX]",
+                        })[entry.source.name], vim_item.kind)
+                        vim_item.kind = string.format('%s', kind_icons[vim_item.kind])
+                        return vim_item
+                    end
+                },
+                Snippet = {
+                    expand = function(args)
+                        require('luasnip').lsp_expand(args.body)
+                    end
                 }
-            },
-            root_dir = function()
-                return vim.loop.cwd()
+            })
+        end
+    },
+
+    -- LSP
+    {
+        'neovim/nvim-lspconfig',
+        cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
+        event = { 'BufReadPre', 'BufNewFile' },
+        dependencies = {
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'williamboman/mason-lspconfig.nvim' },
+            { "simrat39/rust-tools.nvim" },
+            { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
+            { "simrat39/inlay-hints.nvim" },
+        },
+        config = function()
+            -- function to toggle "normal" diagnostics or lsp-lines diagnostics.
+            local function toggle_diagnostics()
+                local diagnostics_on = require("lsp_lines").toggle()
+                if diagnostics_on then
+                    vim.diagnostic.config({
+                        virtual_text = false,
+                    })
+                else
+                    vim.diagnostic.config({
+                        virtual_text = { spacing = 4, prefix = "●" },
+                    })
+                end
             end
-        })
 
-        lspc.eslint.setup({
-            capabilities = capabilities,
-            root_dir = function()
-                return vim.loop.cwd()
+
+            -- This is where all the LSP shenanigans will live
+            local lsp_zero = require('lsp-zero')
+
+            lsp_zero.extend_lspconfig()
+
+            local attach = function(client, bufnr)
+                local opts = { buffer = bufnr, remap = false }
+
+                vim.keymap.set("n", "<Leader>td", toggle_diagnostics, { desc = "Toggle lsp_lines" }, opts)
+                vim.keymap.set("n", "<A-f>", function() vim.lsp.buf.format() end, opts)
+                vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+                vim.keymap.set("n", "<Leader>d", '<cmd>Telescope lsp_document_symbols<cr>', opts)
+                vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+                vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
+                vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
+                vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
+                vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end,
+                    { buffer = bufnr, remap = false, desc = "code_action" })
+                vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end,
+                    { buffer = bufnr, remap = false, desc = "references" })
+                vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end,
+                    { buffer = bufnr, remap = false, desc = "rename" })
+                vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
             end
-        })
 
-        require("rust-tools").setup({ server = rust_lsp })
+            lsp_zero.on_attach(function(client, bufnr)
+                attach(client, bufnr)
+            end)
 
-        require("lsp_lines").setup()
-    end
+            local lspc = require('lspconfig')
+
+            local capabilities = vim.lsp.protocol.make_client_capabilities()
+            capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+            local inlay = require('inlay-hints')
+
+            require('mason-lspconfig').setup({
+                ensure_installed = {
+                    'volar',
+                    'rust_analyzer',
+                    'pylsp',
+                    'clangd',
+                    'lua_ls',
+                    'emmet_ls',
+                    'eslint',
+                    'cssls',
+                    'bashls',
+                },
+                handlers = {
+                    lsp_zero.default_setup,
+                    lua_ls = function()
+                        local lua_opts = lsp_zero.nvim_lua_ls()
+                        lspc.lua_ls.setup(lua_opts)
+                    end,
+                    volar = function()
+                        lspc.volar.setup({
+                            capabilities = capabilities,
+                            on_attach = function(client, bufnr)
+                                client.server_capabilities.document_formatting = true
+                                client.server_capabilities.document_range_formatting = true
+                                vim.bo.tabstop = 2
+                                vim.bo.shiftwidth = 2
+                                vim.bo.expandtab = true
+                                vim.bo.softtabstop = 2
+                                attach(client, bufnr)
+                            end,
+                            filetypes = { 'typescript', 'javascript', 'vue', 'json' },
+                            init_options = {
+                                typescript = {
+                                    tsdk = "/usr/lib/node_modules/typescript/lib"
+                                }
+                            },
+                            root_dir = function()
+                                return vim.loop.cwd()
+                            end
+                        })
+                    end,
+                    html = function()
+                        lspc.html({
+                            capabilities = capabilities,
+                        })
+                    end,
+                    emmet_ls = function()
+                        lspc.emmet_ls.setup({
+                            capabilities = capabilities,
+                            filetypes = { 'html', 'vue', 'js', 'css', 'scss', 'sass' },
+                            root_dir = function()
+                                return vim.loop.cwd()
+                            end
+                        })
+                    end,
+                    eslint = function()
+                        lspc.eslint.setup({
+                            root_dir = function()
+                                return vim.loop.cwd()
+                            end
+                        })
+                    end,
+                    rust_analyzer = function()
+                        local rust_tools = require('rust-tools')
+
+                        rust_tools.setup({
+                            tools = {
+                                hover_action = nil,
+                            },
+                            server = {
+                                on_attach = function(client, bufnr)
+                                    attach(client, bufnr)
+                                end,
+                                settings = {
+                                    ['rust-analyzer'] = {
+                                        checkOnSave = {
+                                            allFeatures = true,
+                                            overrideCommand = {
+                                                'cargo', 'clippy', '--workspace', '--message-format=json',
+                                                '--all-targets', '--all-features'
+                                            }
+                                        },
+                                        diagnostics = {
+                                            enable = true,
+                                            experimental = {
+                                                enable = true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        })
+                    end,
+                    clangd = function()
+                        lspc.clangd.setup({
+                            on_attach = function(c, b)
+                                local opts = { buffer = b, remap = false, desc = "Switch Source Header" }
+                                vim.keymap.set("n", "<Leader>r", function() vim.cmd('ClangdSwitchSourceHeader') end, opts)
+                                attach(c, b)
+                            end
+                        })
+                    end,
+                    gopls = function()
+                        lspc.gopls.setup({
+                            on_attach = function(c, b)
+                                inlay.on_attach(c, b)
+                                attach(c, b)
+                            end,
+                            settings = {
+                                gopls = {
+                                    hints = {
+                                        assignVariableTypes = true,
+                                        compositeLiteralFields = true,
+                                        compositeLiteralTypes = true,
+                                        constantValues = true,
+                                        functionTypeParameters = true,
+                                        parameterNames = true,
+                                        rangeVariableTypes = true,
+                                    },
+                                },
+                            },
+                            root_dir = function()
+                                return vim.loop.cwd()
+                            end,
+                        })
+                    end
+                }
+            })
+
+            require("lsp_lines").setup()
+        end
+    }
 }

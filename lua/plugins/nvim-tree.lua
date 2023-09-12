@@ -3,17 +3,18 @@ return {
     tag = 'nightly',
     cmd = "NvimTreeToggle",
     keys = {
-        { "<leader>b", vim.cmd.NvimTreeToggle, desc = "tree toggle" },
-        { "<leader>pv", vim.cmd.NvimTreeFindFile, desc = "tree open file"}
+        { "<leader>b",  vim.cmd.NvimTreeToggle,   desc = "tree toggle" },
+        { "<leader>pv", vim.cmd.NvimTreeFindFile, desc = "tree open file" }
     },
-    lazy = false,
-    config = function()
+    lazy = true,
+    init = function()
         vim.g.loaded_netrw = 1
         vim.g.loaded_netrwPlugin = 1
-
+    end,
+    config = function()
         local function change_root_to_global_cwd()
             local api = require("nvim-tree.api")
-            local global_cwd = vim.fn.getcwd( -1, -1)
+            local global_cwd = vim.fn.getcwd(-1, -1)
             api.tree.change_root(global_cwd)
         end
 

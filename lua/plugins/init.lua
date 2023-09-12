@@ -7,7 +7,6 @@ return {
             require("which-key").setup()
         end
     },
-    "simrat39/rust-tools.nvim",
 
     "ThePrimeagen/vim-be-good",
     "levouh/tint.nvim",
@@ -15,7 +14,6 @@ return {
     'tikhomirov/vim-glsl',
     "luckasRanarison/tree-sitter-hypr",
 
-    "simrat39/inlay-hints.nvim",
 
 
     {
@@ -28,7 +26,19 @@ return {
     },
 
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-    "lukas-reineke/indent-blankline.nvim",
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        branch = "v3",
+        config = function()
+            require('ibl').setup({
+                scope = { enabled = false },
+                indent = {
+                    highlight = { "@comment" },
+                    char = '│'
+                }
+            })
+        end
+    },
 
 
     {
