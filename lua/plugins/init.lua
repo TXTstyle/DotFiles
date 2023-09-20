@@ -14,8 +14,6 @@ return {
     'tikhomirov/vim-glsl',
     "luckasRanarison/tree-sitter-hypr",
 
-
-
     {
         "kylechui/nvim-surround",
         config = function()
