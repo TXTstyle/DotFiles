@@ -1,7 +1,7 @@
 return {
     {
         'VonHeikemen/lsp-zero.nvim',
-        branch = 'dev-v3',
+        branch = 'v3.x',
         lazy = false,
         config = false,
         init = function()

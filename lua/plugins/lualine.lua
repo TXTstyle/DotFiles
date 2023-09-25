@@ -31,18 +31,6 @@ return {
             return sections
         end
 
-        local function search_result()
-            if vim.v.hlsearch == 0 then
-                return ''
-            end
-            local last_search = vim.fn.getreg('/')
-            if not last_search or last_search == '' then
-                return ''
-            end
-            local searchcount = vim.fn.searchcount { maxcount = 9999 }
-            return last_search .. '(' .. searchcount.current .. '/' .. searchcount.total .. ')'
-        end
-
         local function modified()
             if vim.bo.modified then
                 return '+'
@@ -77,8 +65,7 @@ return {
                         sections = { 'warn' },
                         diagnostics_color = { warn = { bg = c.orange, fg = c.bg2 } },
                     },
-                    -- { 'filename', file_status = false,        path = 1 },
-                    { modified,   color = { bg = c.red } },
+                    { modified, color = { bg = c.red } },
                     {
                         '%w',
                         cond = function()
@@ -100,7 +87,14 @@ return {
                 },
                 lualine_c = {},
                 lualine_x = {},
-                lualine_y = { search_result, 'filetype' },
+                lualine_y = {
+                    'filetype',
+                    {
+                        require("lazy.status").updates,
+                        cond = require("lazy.status").has_updates,
+                        color = { bg = c.orange, fg = c.bg2 },
+                    },
+                },
                 lualine_z = { '%l:%c', '%p%%/%L' },
             },
             inactive_sections = {

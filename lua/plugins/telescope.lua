@@ -1,12 +1,19 @@
 return {
     'nvim-telescope/telescope.nvim',
-    tag = '0.1.2',
-    dependencies = { { 'nvim-lua/plenary.nvim' } },
+    tag = '0.1.3',
+    dependencies = {
+        'nvim-lua/plenary.nvim',
+        'nvim-lua/popup.nvim',
+        "jvgrootveld/telescope-zoxide",
+    },
     config = function()
+        local t = require("telescope")
         local actions = require("telescope.actions")
-        require("telescope").setup {
+        local builtin = require('telescope.builtin')
+
+        t.setup {
             defaults = {
-                file_ignore_patterns = { "node_modules" },
+                file_ignore_patterns = { "node_modules", "target" },
                 path_display = { 'smart' },
                 -- border = false,
                 mappings = {
@@ -29,8 +36,28 @@ return {
                 },
                 prompt_prefix = '󰞷 ',
                 layout_strategy = 'horizontal_merged'
+            },
+            extensions = {
+                zoxide = {
+                    prompt_title = "",
+                    mappings = {
+                        default = {
+                            action = function(selection)
+                                vim.cmd("Lazy load nvim-tree.lua")
+                                vim.cmd.cd(selection.path)
+                            end,
+                            after_action = function(selection)
+                                print("Changed root to " .. selection.path)
+                                require("nvim-tree.api").tree.change_root(selection.path)
+                                builtin.find_files({ cwd = selection.path })
+                            end
+                        },
+                    },
+                }
             }
         }
+
+        t.load_extension('zoxide')
 
         require('telescope.pickers.layout_strategies').horizontal_merged = function(picker, max_columns, max_lines,
                                                                                     layout_config)
@@ -39,7 +66,9 @@ return {
 
             layout.prompt.title = ''
             layout.results.title = ''
-            layout.preview.title = ''
+            if not (layout.preview ~= nil) then
+                layout.preview.title = ''
+            end
 
             local colors = require('onedark.colors')
             local TelescopePrompt = {
@@ -76,8 +105,6 @@ return {
         end
 
 
-        local builtin = require('telescope.builtin')
-
         vim.keymap.set('n', '<Leader>ff', function()
             builtin.find_files()
         end)
@@ -85,5 +112,7 @@ return {
             builtin.git_files()
         end, {})
         vim.keymap.set('n', '<Leader>gp', builtin.live_grep)
+
+        vim.keymap.set("n", "<leader>cd", t.extensions.zoxide.list)
     end
 }

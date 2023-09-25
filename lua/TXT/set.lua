@@ -6,6 +6,10 @@ vim.o.timeoutlen = 700
 
 vim.o.encoding = 'utf-8'
 vim.o.fileencoding = 'utf-8'
+vim.o.guifont = "JetBrainsMono Nerd Font"
+vim.g.neovide_refresh_rate = 144
+vim.g.neovide_cursor_animation_length = 0.1
+vim.g.neovide_cursor_trail_size = 0.5
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
