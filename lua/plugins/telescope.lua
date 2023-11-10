@@ -70,31 +70,32 @@ return {
                 layout.preview.title = ''
             end
 
-            local colors = require('onedark.colors')
+            -- local colors = require('onedark.colors')
+            local colors = require('catppuccin.palettes').get_palette('frappe')
             local TelescopePrompt = {
                 TelescopePromptNormal = {
-                    fg = colors.white,
-                    bg = colors.bg3
+                    fg = colors.text,
+                    bg = colors.crust
                 },
                 TelescopePromptBorder = {
-                    fg = colors.bg3,
-                    bg = colors.bg3
+                    fg = colors.crust,
+                    bg = colors.crust
                 },
                 TelescopeBorder = {
-                    fg = colors.bg0,
-                    bg = colors.bg0
+                    fg = colors.base,
+                    bg = colors.base
                 },
                 TelescopeResultsNormal = {
-                    fg = colors.white,
-                    bg = colors.bg1
+                    fg = colors.text,
+                    bg = colors.mantle
                 },
                 TelescopeResultsBorder = {
-                    fg = colors.bg1,
-                    bg = colors.bg1
+                    fg = colors.mantle,
+                    bg = colors.mantle
                 },
                 TelescopePreviewBorder = {
-                    bg = colors.bg0,
-                    fg = colors.bg0
+                    bg = colors.base,
+                    fg = colors.base
                 }
             }
             for hl, col in pairs(TelescopePrompt) do

@@ -7,7 +7,7 @@ return {
         "nvim-tree/nvim-web-devicons",
     },
     opts = {
-        theme = "onedark",
+        theme = "catppuccin",
         exclude_filetypes = { "toggleterm", "Trouble" },
     },
 }

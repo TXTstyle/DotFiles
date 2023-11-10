@@ -11,6 +11,6 @@ return {
                 transparent = true
             }
         }
-        require('onedark').load()
+        -- require('onedark').load()
     end
 }

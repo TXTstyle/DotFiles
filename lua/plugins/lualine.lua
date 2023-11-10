@@ -2,7 +2,11 @@ return {
     'nvim-lualine/lualine.nvim',
     dependencies = { { "nvim-tree/nvim-web-devicons", opt = true }, 'navarasu/onedark.nvim' },
     config = function()
-        local c = require('onedark.colors')
+        local colors = require('catppuccin.palettes').get_palette("frappe")
+
+        local theme = require('catppuccin.utils.lualine')("frappe")
+
+        theme.normal.c.bg = colors.base
 
         local empty = require('lualine.component'):extend()
         function empty:draw(default_highlight)
@@ -18,7 +22,7 @@ return {
             for name, section in pairs(sections) do
                 local left = name:sub(9, 10) < 'x'
                 for pos = 1, name ~= 'lualine_z' and #section or #section - 1 do
-                    table.insert(section, pos * 2, { empty, color = { fg = c.bg, bg = c.bg } })
+                    table.insert(section, pos * 2, { empty, color = { fg = colors.base, bg = colors.base } })
                 end
                 for id, comp in ipairs(section) do
                     if type(comp) ~= 'table' then
@@ -42,7 +46,7 @@ return {
 
         require('lualine').setup {
             options = {
-                theme = 'onedark',
+                theme = theme,
                 component_separators = '',
                 section_separators = { left = '', right = '' },
                 extensions = { 'fugitive' },
@@ -57,15 +61,15 @@ return {
                         'diagnostics',
                         source = { 'nvim' },
                         sections = { 'error' },
-                        diagnostics_color = { error = { bg = c.red, fg = c.bg2 } },
+                        diagnostics_color = { error = { bg = colors.red, fg = colors.base } },
                     },
                     {
                         'diagnostics',
                         source = { 'nvim' },
                         sections = { 'warn' },
-                        diagnostics_color = { warn = { bg = c.orange, fg = c.bg2 } },
+                        diagnostics_color = { warn = { bg = colors.orange, fg = colors.base } },
                     },
-                    { modified, color = { bg = c.red } },
+                    { modified, color = { bg = colors.red } },
                     {
                         '%w',
                         cond = function()
@@ -87,14 +91,7 @@ return {
                 },
                 lualine_c = {},
                 lualine_x = {},
-                lualine_y = {
-                    'filetype',
-                    {
-                        require("lazy.status").updates,
-                        cond = require("lazy.status").has_updates,
-                        color = { bg = c.orange, fg = c.bg2 },
-                    },
-                },
+                lualine_y = { 'filetype' },
                 lualine_z = { '%l:%c', '%p%%/%L' },
             },
             inactive_sections = {

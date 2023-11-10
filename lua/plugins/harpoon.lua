@@ -28,11 +28,11 @@ return {
         vim.keymap.set("n", "<Leader>9", function() ui.nav_file(9) end)
         vim.keymap.set("n", "<Leader>0", function() ui.nav_file(10) end)
 
-        local colors = require('onedark.colors')
-        vim.api.nvim_set_hl(0, 'HarpoonActive',         { fg = colors.bg0, bg = colors.green, bold = true })
-        vim.api.nvim_set_hl(0, 'HarpoonNumberActive',   { fg = colors.bg0, bg = colors.green, bold = true })
-        vim.api.nvim_set_hl(0, 'HarpoonInactive',       { fg = colors.bg0, bg = colors.bg2 })
-        vim.api.nvim_set_hl(0, 'HarpoonNumberInactive', { fg = colors.bg0, bg = colors.bg2 })
-        vim.api.nvim_set_hl(0, 'TabLineFill',           { fg = colors.bg0, bg = colors.bg0 })
+        local colors = require('catppuccin.palettes').get_palette('frappe')
+        vim.api.nvim_set_hl(0, 'HarpoonActive',         { fg = colors.base, bg = colors.overlay1, bold = true })
+        vim.api.nvim_set_hl(0, 'HarpoonNumberActive',   { fg = colors.base, bg = colors.overlay1, bold = true })
+        vim.api.nvim_set_hl(0, 'HarpoonInactive',       { fg = colors.base, bg = colors.surface0 })
+        vim.api.nvim_set_hl(0, 'HarpoonNumberInactive', { fg = colors.base, bg = colors.surface0 })
+        vim.api.nvim_set_hl(0, 'TabLineFill',           { fg = colors.base, bg = colors.base })
     end
 }
