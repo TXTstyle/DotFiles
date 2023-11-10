@@ -80,6 +80,7 @@ return {
             val = {
                 button("e", "  New file", "<cmd>ene <CR>"),
                 button("Leader f f", "󰈞  Find file"),
+                button("Leader c d", "  Change directory"),
             },
             opts = {
                 spacing = 1,

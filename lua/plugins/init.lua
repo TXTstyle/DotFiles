@@ -29,7 +29,12 @@ return {
         branch = "v3",
         config = function()
             require('ibl').setup({
-                scope = { enabled = false },
+                scope = {
+                    enabled = true,
+                    show_start = false,
+                    injected_languages = false,
+                    highlight = { "@text" }
+                },
                 indent = {
                     highlight = { "@comment" },
                     char = '│'
