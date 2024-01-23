@@ -58,6 +58,7 @@ return {
         }
 
         t.load_extension('zoxide')
+        t.load_extension("flutter")
 
         require('telescope.pickers.layout_strategies').horizontal_merged = function(picker, max_columns, max_lines,
                                                                                     layout_config)

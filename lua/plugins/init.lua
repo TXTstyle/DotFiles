@@ -13,6 +13,12 @@ return {
     "elkowar/yuck.vim",
     'tikhomirov/vim-glsl',
     "luckasRanarison/tree-sitter-hypr",
+    'reisub0/hot-reload.vim',
+
+    {
+        "luckasRanarison/tree-sitter-hyprlang",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+    },
 
     {
         "kylechui/nvim-surround",
@@ -22,6 +28,8 @@ return {
             })
         end
     },
+
+    'pest-parser/pest.vim',
 
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
     {

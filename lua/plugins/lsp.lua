@@ -9,7 +9,7 @@ return {
             vim.g.lsp_zero_extend_cmp = 0
             vim.g.lsp_zero_extend_lspconfig = 0
 
-            local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+            local signs = { Error = " ", Warn = " ", Hint = "󰍉", Info = " " }
             for type, icon in pairs(signs) do
                 local hl = "DiagnosticSign" .. type
                 vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
@@ -38,30 +38,30 @@ return {
         config = function()
             local kind_icons = {
                 Text = "",
-                Method = "",
-                Function = "",
+                Method = "󰆧",
+                Function = "󰊕",
                 Constructor = "",
-                Field = "",
-                Variable = "",
-                Class = "ﴯ",
+                Field = "󰇽",
+                Variable = "󰂡",
+                Class = "󰠱",
                 Interface = "",
                 Module = "",
-                Property = "ﰠ",
+                Property = "󰜢",
                 Unit = "",
-                Value = "",
+                Value = "󰎠",
                 Enum = "",
-                Keyword = "",
+                Keyword = "󰌋",
                 Snippet = "",
-                Color = "",
-                File = "",
+                Color = "󰏘",
+                File = "󰈙",
                 Reference = "",
-                Folder = "",
+                Folder = "󰉋",
                 EnumMember = "",
-                Constant = "",
+                Constant = "󰏿",
                 Struct = "",
                 Event = "",
-                Operator = "",
-                TypeParameter = ""
+                Operator = "󰆕",
+                TypeParameter = "󰅲",
             }
 
             -- Here is where you configure the autocompletion settings.
@@ -71,7 +71,7 @@ return {
             -- And you can configure cmp even more, if you want to.
             local cmp = require('cmp')
             local cmp_action = lsp_zero.cmp_action()
-            local select_opts = { behavior = 'select' }
+            local select_opts = {}
 
             local cmp_autopairs = require('nvim-autopairs.completion.cmp')
             cmp.event:on(
@@ -87,11 +87,11 @@ return {
                     completeopt = 'menu,menuone,noinsert'
                 },
                 sources = {
-                    { name = 'nvim_lsp' },
-                    { name = 'nvim_lua' },
-                    { name = 'buffer' },
-                    { name = 'path' },
-                    { name = 'luasnip' },
+                    { name = 'nvim_lsp', priority = 1000 },
+                    { name = 'nvim_lua', priority = 1000 },
+                    { name = 'luasnip',  priority = 750 },
+                    { name = 'buffer',   priority = 500 },
+                    { name = 'path',     priority = 450 },
                 },
                 mapping = {
                     -- confirm selection
@@ -199,10 +199,23 @@ return {
 
             local lspc = require('lspconfig')
 
-            local capabilities = vim.lsp.protocol.make_client_capabilities()
+            local capabilities = lsp_zero.get_capabilities()
             capabilities.textDocument.completion.completionItem.snippetSupport = true
 
             local inlay = require('inlay-hints')
+
+            require('flutter-tools').setup({
+                lsp = {
+                    capabilities = lsp_zero.get_capabilities(),
+                    on_attach = function(client, bufnr)
+                        vim.bo.tabstop = 2
+                        vim.bo.shiftwidth = 2
+                        vim.bo.expandtab = true
+                        vim.bo.softtabstop = 2
+                        attach(client, bufnr)
+                    end,
+                },
+            })
 
             require('mason-lspconfig').setup({
                 ensure_installed = {
@@ -329,6 +342,9 @@ return {
                                 return vim.loop.cwd()
                             end,
                         })
+                    end,
+                    pest_ls = function()
+                        require("pest-vim").setup {}
                     end
                 }
             })
