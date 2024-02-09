@@ -12,13 +12,7 @@ return {
     "levouh/tint.nvim",
     "elkowar/yuck.vim",
     'tikhomirov/vim-glsl',
-    "luckasRanarison/tree-sitter-hypr",
     'reisub0/hot-reload.vim',
-
-    {
-        "luckasRanarison/tree-sitter-hyprlang",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-    },
 
     {
         "kylechui/nvim-surround",
