@@ -108,7 +108,7 @@ return {
                     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
 
                     -- toggle completion
-                    ['<C-e>'] = cmp.mapping(function()
+                    ['<C-k>'] = cmp.mapping(function()
                         if cmp.visible() then
                             cmp.abort()
                         else
@@ -137,6 +137,9 @@ return {
                     expand = function(args)
                         require('luasnip').lsp_expand(args.body)
                     end
+                },
+                experimental = {
+                    ghost_text = true,
                 }
             })
         end
@@ -150,9 +153,10 @@ return {
         dependencies = {
             { 'hrsh7th/cmp-nvim-lsp' },
             { 'williamboman/mason-lspconfig.nvim' },
-            { "simrat39/rust-tools.nvim" },
             { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
-            { "simrat39/inlay-hints.nvim" },
+        },
+        opts = {
+            inlay_hint = { enable = true },
         },
         config = function()
             -- function to toggle "normal" diagnostics or lsp-lines diagnostics.
@@ -164,7 +168,7 @@ return {
                     })
                 else
                     vim.diagnostic.config({
-                        virtual_text = { spacing = 4, prefix = "●" },
+                        virtual_text = { spacing = 8, prefix = "●" },
                     })
                 end
             end
@@ -175,8 +179,9 @@ return {
 
             lsp_zero.extend_lspconfig()
 
-            local attach = function(client, bufnr)
+            local attach = function(_, bufnr)
                 local opts = { buffer = bufnr, remap = false }
+                vim.lsp.inlay_hint.enable(true, nil)
 
                 vim.keymap.set("n", "<Leader>td", toggle_diagnostics, { desc = "Toggle lsp_lines" }, opts)
                 vim.keymap.set("n", "<A-f>", function() vim.lsp.buf.format() end, opts)
@@ -202,11 +207,9 @@ return {
             local capabilities = lsp_zero.get_capabilities()
             capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-            local inlay = require('inlay-hints')
-
             require('flutter-tools').setup({
                 lsp = {
-                    capabilities = lsp_zero.get_capabilities(),
+                    capabilities = capabilities,
                     on_attach = function(client, bufnr)
                         vim.bo.tabstop = 2
                         vim.bo.shiftwidth = 2
@@ -232,7 +235,13 @@ return {
                 handlers = {
                     lsp_zero.default_setup,
                     lua_ls = function()
-                        local lua_opts = lsp_zero.nvim_lua_ls()
+                        local lua_opts = lsp_zero.nvim_lua_ls({
+                            settings = {
+                                Lua = {
+                                    hint = { enable = true }
+                                }
+                            }
+                        })
                         lspc.lua_ls.setup(lua_opts)
                     end,
                     volar = function()
@@ -280,30 +289,24 @@ return {
                         })
                     end,
                     rust_analyzer = function()
-                        local rust_tools = require('rust-tools')
-
-                        rust_tools.setup({
-                            tools = {
-                                hover_action = nil,
-                            },
-                            server = {
-                                on_attach = function(client, bufnr)
-                                    attach(client, bufnr)
-                                end,
-                                settings = {
-                                    ['rust-analyzer'] = {
-                                        checkOnSave = {
-                                            allFeatures = true,
-                                            overrideCommand = {
-                                                'cargo', 'clippy', '--workspace', '--message-format=json',
-                                                '--all-targets', '--all-features'
-                                            }
-                                        },
-                                        diagnostics = {
+                        lspc.rust_analyzer.setup({
+                            capabilities = capabilities,
+                            on_attach = function(client, bufnr)
+                                attach(client, bufnr)
+                            end,
+                            settings = {
+                                ['rust-analyzer'] = {
+                                    checkOnSave = {
+                                        allFeatures = true,
+                                        overrideCommand = {
+                                            'cargo', 'clippy', '--workspace', '--message-format=json',
+                                            '--all-targets', '--all-features'
+                                        }
+                                    },
+                                    diagnostics = {
+                                        enable = true,
+                                        experimental = {
                                             enable = true,
-                                            experimental = {
-                                                enable = true,
-                                            },
                                         },
                                     },
                                 },
@@ -322,7 +325,6 @@ return {
                     gopls = function()
                         lspc.gopls.setup({
                             on_attach = function(c, b)
-                                inlay.on_attach(c, b)
                                 attach(c, b)
                             end,
                             settings = {

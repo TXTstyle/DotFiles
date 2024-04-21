@@ -43,6 +43,7 @@ return {
                         { key = "<C-C>",      action = "global_cwd", action_cb = change_root_to_global_cwd },
                     },
                 },
+                side = "right",
             },
             renderer = {
                 group_empty = true,

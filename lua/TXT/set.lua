@@ -2,7 +2,8 @@ vim.opt.nu = true
 vim.opt.relativenumber = true
 
 vim.o.timeout = true
-vim.o.timeoutlen = 700
+vim.o.timeoutlen = 500
+vim.o.timeout = true
 
 vim.o.encoding = 'utf-8'
 vim.o.fileencoding = 'utf-8'
@@ -37,6 +38,8 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "85"
+
+vim.cmd.colorscheme "catppuccin"
 
 vim.diagnostic.config({
     virtual_text = false,
