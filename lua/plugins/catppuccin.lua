@@ -3,11 +3,16 @@ return {
     name = "catppuccin",
     priority = 1000,
     opts = {
-        flavour = "frappe",
+        flavour = "macchiato",
         term_colors = true,
         custom_highlights = function(colors)
             return {
                 LspInlayHint = { fg = colors.overlay1, bg = colors.base },
+                HarpoonActive = { fg = colors.base, bg = colors.overlay1, bold = true },
+                HarpoonNumberActive = { fg = colors.base, bg = colors.overlay1, bold = true },
+                HarpoonInactive = { fg = colors.base, bg = colors.surface0 },
+                HarpoonNumberInactive = { fg = colors.base, bg = colors.surface0 },
+                TabLineFill = { fg = colors.base, bg = colors.base },
             }
         end,
         integrations = {

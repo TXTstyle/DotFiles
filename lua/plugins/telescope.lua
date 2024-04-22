@@ -71,8 +71,7 @@ return {
                 layout.preview.title = ''
             end
 
-            -- local colors = require('onedark.colors')
-            local colors = require('catppuccin.palettes').get_palette('frappe')
+            local colors = require('catppuccin.palettes').get_palette(vim.g.catppuccin_flavour)
             local TelescopePrompt = {
                 TelescopePromptNormal = {
                     fg = colors.text,
