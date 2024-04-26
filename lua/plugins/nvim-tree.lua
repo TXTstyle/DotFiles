@@ -1,6 +1,5 @@
 return {
     'nvim-tree/nvim-tree.lua',
-    tag = 'nightly',
     cmd = "NvimTreeToggle",
     keys = {
         { "<leader>b",  vim.cmd.NvimTreeToggle,   desc = "tree toggle" },

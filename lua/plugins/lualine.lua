@@ -2,9 +2,10 @@ return {
     'nvim-lualine/lualine.nvim',
     dependencies = { { "nvim-tree/nvim-web-devicons", opt = true } },
     config = function()
-        local colors = require('catppuccin.palettes').get_palette("frappe")
+        local flavour = require("catppuccin").flavour or vim.g.catppuccin_flavour or "macchiato"
+        local colors = require('catppuccin.palettes').get_palette(flavour)
 
-        local theme = require('catppuccin.utils.lualine')("frappe")
+        local theme = require('catppuccin.utils.lualine')(flavour)
 
         theme.normal.c.bg = colors.base
 
