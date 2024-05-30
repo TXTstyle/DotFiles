@@ -43,9 +43,17 @@ vim.cmd.colorscheme "catppuccin"
 
 vim.diagnostic.config({
     virtual_text = false,
-    signs = true,
     update_in_insert = true,
     underline = true,
-    severity_sort = false,
+    severity_sort = true,
     float = true,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN] = "",
+            [vim.diagnostic.severity.HINT] = "󰍉",
+            [vim.diagnostic.severity.INFO] = "",
+        },
+
+    },
 })

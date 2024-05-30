@@ -8,12 +8,6 @@ return {
             -- Disable automatic setup, we are doing it manually
             vim.g.lsp_zero_extend_cmp = 0
             vim.g.lsp_zero_extend_lspconfig = 0
-
-            local signs = { Error = " ", Warn = " ", Hint = "󰍉", Info = " " }
-            for type, icon in pairs(signs) do
-                local hl = "DiagnosticSign" .. type
-                vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-            end
         end,
     },
     {
@@ -139,7 +133,7 @@ return {
                     end
                 },
                 experimental = {
-                    ghost_text = true,
+                    ghost_text = false,
                 }
             })
         end
@@ -183,7 +177,8 @@ return {
                 local opts = { buffer = bufnr, remap = false }
                 vim.lsp.inlay_hint.enable(true, nil)
 
-                vim.keymap.set("n", "<Leader>td", toggle_diagnostics, { desc = "Toggle lsp_lines" }, opts)
+                vim.keymap.set("n", "<Leader>td", toggle_diagnostics,
+                    { desc = "Toggle lsp_lines", buffer = bufnr, remap = false })
                 vim.keymap.set("n", "<A-f>", function() vim.lsp.buf.format() end, opts)
                 vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
                 vim.keymap.set("n", "<Leader>d", '<cmd>Telescope lsp_document_symbols<cr>', opts)
