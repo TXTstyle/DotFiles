@@ -1,13 +1,5 @@
 return {
-    {
-        "folke/which-key.nvim",
-        config = function()
-            require("which-key").setup()
-        end
-    },
-
     "ThePrimeagen/vim-be-good",
-    "levouh/tint.nvim",
     "elkowar/yuck.vim",
     'tikhomirov/vim-glsl',
     'reisub0/hot-reload.vim',

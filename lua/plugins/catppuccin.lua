@@ -15,6 +15,11 @@ return {
                 TabLineFill = { fg = colors.base, bg = colors.base },
             }
         end,
+        dim_inactive = {
+            enabled = true,
+            shade = "dark",
+            percentage = 0.85,
+        },
         integrations = {
             cmp = true,
             gitsigns = true,

@@ -97,10 +97,6 @@ return {
                     ['<C-p>'] = cmp.mapping.select_prev_item(select_opts),
                     ['<C-n>'] = cmp.mapping.select_next_item(select_opts),
 
-                    -- scroll up and down in the completion documentation
-                    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-                    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-
                     -- toggle completion
                     ['<C-k>'] = cmp.mapping(function()
                         if cmp.visible() then
@@ -109,8 +105,10 @@ return {
                             cmp.complete()
                         end
                     end),
-                    ['<Tab>'] = cmp_action.luasnip_jump_forward(),
-                    ['<S-Tab>'] = cmp_action.luasnip_jump_backward(),
+
+                    -- snippets navigation
+                    ['<C-f>'] = cmp_action.luasnip_jump_forward(),
+                    ['<C-b>'] = cmp_action.luasnip_jump_backward(),
                 },
                 formatting = {
                     fields = { "kind", "abbr", "menu" },
@@ -223,9 +221,8 @@ return {
                     'clangd',
                     'lua_ls',
                     'emmet_ls',
-                    'eslint',
+                    -- 'eslint',
                     'cssls',
-                    'bashls',
                 },
                 handlers = {
                     lsp_zero.default_setup,
@@ -258,7 +255,7 @@ return {
                                 }
                             },
                             root_dir = function()
-                                return vim.loop.cwd()
+                                return vim.fn.getcwd();
                             end
                         })
                     end,
@@ -272,14 +269,14 @@ return {
                             capabilities = capabilities,
                             filetypes = { 'html', 'vue', 'js', 'css', 'scss', 'sass' },
                             root_dir = function()
-                                return vim.loop.cwd()
+                                return vim.fn.getcwd();
                             end
                         })
                     end,
                     eslint = function()
                         lspc.eslint.setup({
                             root_dir = function()
-                                return vim.loop.cwd()
+                                return vim.fn.getcwd();
                             end
                         })
                     end,
@@ -336,7 +333,7 @@ return {
                                 },
                             },
                             root_dir = function()
-                                return vim.loop.cwd()
+                                return vim.fn.getcwd()
                             end,
                         })
                     end,

@@ -4,7 +4,7 @@ return {
     opts = {
         preview = {
             quit = 'q',  -- optional keymapping for quit preview
-            accept = '<tab>' -- optional keymapping for accept preview
+            accept = '<c-y>' -- optional keymapping for accept preview
         },
     }
 }
