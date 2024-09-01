@@ -178,6 +178,7 @@ return {
                 vim.keymap.set("n", "<Leader>td", toggle_diagnostics,
                     { desc = "Toggle lsp_lines", buffer = bufnr, remap = false })
                 vim.keymap.set("n", "<A-f>", function() vim.lsp.buf.format() end, opts)
+                vim.keymap.set("n", "ƒ", function() vim.lsp.buf.format() end, opts)
                 vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
                 vim.keymap.set("n", "<Leader>d", '<cmd>Telescope lsp_document_symbols<cr>', opts)
                 vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
