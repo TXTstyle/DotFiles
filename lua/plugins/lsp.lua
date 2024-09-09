@@ -160,7 +160,14 @@ return {
                     })
                 else
                     vim.diagnostic.config({
-                        virtual_text = { spacing = 8, prefix = "●" },
+                        virtual_text = {
+                            enable = true,
+                            spacing = 8,
+                            prefix = "●",
+                            severity = {
+                                min = "ERROR",
+                            }
+                        },
                     })
                 end
             end
