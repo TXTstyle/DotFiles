@@ -258,9 +258,37 @@ return {
                             end,
                             filetypes = { 'typescript', 'javascript', 'vue', 'json' },
                             init_options = {
-                                typescript = {
-                                    tsdk = "/usr/lib/node_modules/typescript/lib"
-                                }
+                                vue = {
+                                    hybridMode = false,
+                                },
+                            },
+                            root_dir = function()
+                                return vim.fn.getcwd();
+                            end
+                        })
+                    end,
+                    ts_ls = function()
+                        local vue_language_server_path = require("mason-registry").get_package("vue-language-server")
+                        :get_install_path() .. "/node_modules/@vue/language-server"
+                        lspc.ts_ls.setup({
+                            capabilities = capabilities,
+                            on_attach = function(client, bufnr)
+                                client.server_capabilities.document_formatting = true
+                                client.server_capabilities.document_range_formatting = true
+                                vim.bo.tabstop = 2
+                                vim.bo.shiftwidth = 2
+                                vim.bo.expandtab = true
+                                vim.bo.softtabstop = 2
+                                attach(client, bufnr)
+                            end,
+                            init_options = {
+                                plugins = {
+                                    {
+                                        name = '@vue/typescript-plugin',
+                                        location = vue_language_server_path,
+                                        languages = { 'vue' },
+                                    },
+                                },
                             },
                             root_dir = function()
                                 return vim.fn.getcwd();
@@ -289,29 +317,14 @@ return {
                         })
                     end,
                     rust_analyzer = function()
-                        lspc.rust_analyzer.setup({
-                            capabilities = capabilities,
-                            on_attach = function(client, bufnr)
-                                attach(client, bufnr)
-                            end,
-                            settings = {
-                                ['rust-analyzer'] = {
-                                    checkOnSave = {
-                                        allFeatures = true,
-                                        overrideCommand = {
-                                            'cargo', 'clippy', '--workspace', '--message-format=json',
-                                            '--all-targets', '--all-features'
-                                        }
-                                    },
-                                    diagnostics = {
-                                        enable = true,
-                                        experimental = {
-                                            enable = true,
-                                        },
-                                    },
-                                },
-                            },
-                        })
+                        vim.g.rustacean = {
+                            server = {
+                                on_attach = function(_, _)
+                                    local bufnr = vim.api.nvim_get_current_buf()
+                                    attach(_, bufnr);
+                                end
+                            }
+                        }
                     end,
                     clangd = function()
                         lspc.clangd.setup({

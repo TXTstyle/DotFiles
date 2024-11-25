@@ -1,7 +1,7 @@
 return {
     "iurimateus/luasnip-latex-snippets.nvim",
     dependencies = { "L3MON4D3/LuaSnip", "lervag/vimtex" },
-    config = {
+    opts = {
         use_treesitter = true,
     },
 }
