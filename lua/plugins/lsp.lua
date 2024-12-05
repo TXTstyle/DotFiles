@@ -1,7 +1,7 @@
 return {
     {
         'VonHeikemen/lsp-zero.nvim',
-        branch = 'v3.x',
+        branch = 'v4.x',
         lazy = false,
         config = false,
         init = function()
@@ -18,16 +18,16 @@ return {
 
     -- Autocompletion
     {
-        'hrsh7th/nvim-cmp',
+        'iguanacucumber/magazine.nvim',
+        name = "nvim-cmp",
         event = 'InsertEnter',
         dependencies = {
             { 'L3MON4D3/LuaSnip' },
-            { 'hrsh7th/cmp-buffer' },
-            { 'hrsh7th/cmp-path' },
-            { 'saadparwaiz1/cmp_luasnip' },
-            { 'hrsh7th/cmp-nvim-lsp' },
-            { 'hrsh7th/cmp-nvim-lua' },
-
+            { "iguanacucumber/mag-nvim-lsp",                    name = "cmp-nvim-lsp", opts = {} },
+            { "iguanacucumber/mag-nvim-lua",                    name = "cmp-nvim-lua" },
+            { "iguanacucumber/mag-buffer",                      name = "cmp-buffer" },
+            { "iguanacucumber/mag-cmdline",                     name = "cmp-cmdline" },
+            { "https://codeberg.org/FelipeLema/cmp-async-path", },
         },
         config = function()
             local kind_icons = {
@@ -81,11 +81,11 @@ return {
                     completeopt = 'menu,menuone,noinsert'
                 },
                 sources = {
-                    { name = 'nvim_lsp', priority = 1000 },
-                    { name = 'nvim_lua', priority = 1000 },
-                    { name = 'luasnip',  priority = 750 },
-                    { name = 'buffer',   priority = 500 },
-                    { name = 'path',     priority = 450 },
+                    { name = 'nvim_lsp',   priority = 1000 },
+                    { name = 'nvim_lua',   priority = 1000 },
+                    { name = 'luasnip',    priority = 750 },
+                    { name = 'buffer',     priority = 500 },
+                    { name = 'async_path', priority = 450 },
                 },
                 mapping = {
                     -- confirm selection
@@ -115,7 +115,7 @@ return {
                     format = function(entry, vim_item)
                         vim_item.menu = string.format('%s %s', ({
                             buffer = "[Buffer]",
-                            path = "[Path]",
+                            async_path = "[Path]",
                             nvim_lsp = "[LSP]",
                             luasnip = "[LuaSnip]",
                             nvim_lua = "[Lua]",
