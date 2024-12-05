@@ -2,7 +2,6 @@ return {
     "ThePrimeagen/vim-be-good",
     "elkowar/yuck.vim",
     'tikhomirov/vim-glsl',
-    'reisub0/hot-reload.vim',
     "sindrets/diffview.nvim",
 
     {

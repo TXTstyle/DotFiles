@@ -131,7 +131,7 @@ return {
                     end
                 },
                 experimental = {
-                    ghost_text = false,
+                    ghost_text = true,
                 }
             })
         end
@@ -269,7 +269,7 @@ return {
                     end,
                     ts_ls = function()
                         local vue_language_server_path = require("mason-registry").get_package("vue-language-server")
-                        :get_install_path() .. "/node_modules/@vue/language-server"
+                            :get_install_path() .. "/node_modules/@vue/language-server"
                         lspc.ts_ls.setup({
                             capabilities = capabilities,
                             on_attach = function(client, bufnr)
@@ -319,8 +319,7 @@ return {
                     rust_analyzer = function()
                         vim.g.rustacean = {
                             server = {
-                                on_attach = function(_, _)
-                                    local bufnr = vim.api.nvim_get_current_buf()
+                                on_attach = function(_, bufnr)
                                     attach(_, bufnr);
                                 end
                             }
