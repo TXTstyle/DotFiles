@@ -16,134 +16,12 @@ return {
         config = true,
     },
 
-    -- Autocompletion
-    {
-        'iguanacucumber/magazine.nvim',
-        name = "nvim-cmp",
-        event = 'InsertEnter',
-        dependencies = {
-            { 'L3MON4D3/LuaSnip' },
-            { "iguanacucumber/mag-nvim-lsp",                    name = "cmp-nvim-lsp", opts = {} },
-            { "iguanacucumber/mag-nvim-lua",                    name = "cmp-nvim-lua" },
-            { "iguanacucumber/mag-buffer",                      name = "cmp-buffer" },
-            { "iguanacucumber/mag-cmdline",                     name = "cmp-cmdline" },
-            { "https://codeberg.org/FelipeLema/cmp-async-path", },
-        },
-        config = function()
-            local kind_icons = {
-                Text = "",
-                Method = "󰆧",
-                Function = "󰊕",
-                Constructor = "",
-                Field = "󰇽",
-                Variable = "󰂡",
-                Class = "󰠱",
-                Interface = "",
-                Module = "",
-                Property = "󰜢",
-                Unit = "",
-                Value = "󰎠",
-                Enum = "",
-                Keyword = "󰌋",
-                Snippet = "",
-                Color = "󰏘",
-                File = "󰈙",
-                Reference = "",
-                Folder = "󰉋",
-                EnumMember = "",
-                Constant = "󰏿",
-                Struct = "",
-                Event = "",
-                Operator = "󰆕",
-                TypeParameter = "󰅲",
-            }
-
-            -- Here is where you configure the autocompletion settings.
-            local lsp_zero = require('lsp-zero')
-            lsp_zero.extend_cmp()
-
-            -- And you can configure cmp even more, if you want to.
-            local cmp = require('cmp')
-            local cmp_action = lsp_zero.cmp_action()
-            local select_opts = {}
-
-            local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-            cmp.event:on(
-                'confirm_done',
-                cmp_autopairs.on_confirm_done()
-            )
-
-            require('luasnip.loaders.from_vscode').lazy_load()
-
-            cmp.setup({
-                preselect = 'item',
-                completion = {
-                    completeopt = 'menu,menuone,noinsert'
-                },
-                sources = {
-                    { name = 'nvim_lsp',   priority = 1000 },
-                    { name = 'nvim_lua',   priority = 1000 },
-                    { name = 'luasnip',    priority = 750 },
-                    { name = 'buffer',     priority = 500 },
-                    { name = 'async_path', priority = 450 },
-                },
-                mapping = {
-                    -- confirm selection
-                    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-
-                    -- navigate items on the list
-                    ['<Up>'] = cmp.mapping.select_prev_item(select_opts),
-                    ['<Down>'] = cmp.mapping.select_next_item(select_opts),
-                    ['<C-p>'] = cmp.mapping.select_prev_item(select_opts),
-                    ['<C-n>'] = cmp.mapping.select_next_item(select_opts),
-
-                    -- toggle completion
-                    ['<C-k>'] = cmp.mapping(function()
-                        if cmp.visible() then
-                            cmp.abort()
-                        else
-                            cmp.complete()
-                        end
-                    end),
-
-                    -- snippets navigation
-                    ['<C-f>'] = cmp_action.luasnip_jump_forward(),
-                    ['<C-b>'] = cmp_action.luasnip_jump_backward(),
-                },
-                formatting = {
-                    fields = { "kind", "abbr", "menu" },
-                    format = function(entry, vim_item)
-                        vim_item.menu = string.format('%s %s', ({
-                            buffer = "[Buffer]",
-                            async_path = "[Path]",
-                            nvim_lsp = "[LSP]",
-                            luasnip = "[LuaSnip]",
-                            nvim_lua = "[Lua]",
-                            latex_symbols = "[LaTeX]",
-                        })[entry.source.name], vim_item.kind)
-                        vim_item.kind = string.format('%s', kind_icons[vim_item.kind])
-                        return vim_item
-                    end
-                },
-                Snippet = {
-                    expand = function(args)
-                        require('luasnip').lsp_expand(args.body)
-                    end
-                },
-                experimental = {
-                    ghost_text = true,
-                }
-            })
-        end
-    },
-
     -- LSP
     {
         'neovim/nvim-lspconfig',
         cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
         event = { 'BufReadPre', 'BufNewFile' },
         dependencies = {
-            { 'hrsh7th/cmp-nvim-lsp' },
             { 'williamboman/mason-lspconfig.nvim' },
             { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
         },
@@ -205,8 +83,7 @@ return {
 
             local lspc = require('lspconfig')
 
-            local capabilities = lsp_zero.get_capabilities()
-            capabilities.textDocument.completion.completionItem.snippetSupport = true
+            local capabilities = require('blink.cmp').get_lsp_capabilities()
 
             require('flutter-tools').setup({
                 lsp = {
@@ -251,7 +128,8 @@ return {
                                     hybridMode = false,
                                 },
                             },
-                            on_attach = function (client, bufnr)
+                            capabilities = capabilities,
+                            on_attach = function(client, bufnr)
                                 client.server_capabilities.document_formatting = true
                                 client.server_capabilities.document_range_formatting = true
                                 vim.bo.tabstop = 2
@@ -297,6 +175,7 @@ return {
                                     },
                                 },
                             },
+                            capabilities = capabilities,
                             settings = {
                                 typescript = {
                                     tsserver = {
@@ -334,12 +213,14 @@ return {
                         lspc.eslint.setup({
                             root_dir = function()
                                 return vim.fn.getcwd();
-                            end
+                            end,
+                            capabilities = capabilities,
                         })
                     end,
                     rust_analyzer = function()
                         vim.g.rustacean = {
                             server = {
+                                capabilities = capabilities,
                                 on_attach = function(_, bufnr)
                                     attach(_, bufnr);
                                 end
@@ -352,7 +233,8 @@ return {
                                 local opts = { buffer = b, remap = false, desc = "Switch Source Header" }
                                 vim.keymap.set("n", "<Leader>r", function() vim.cmd('ClangdSwitchSourceHeader') end, opts)
                                 attach(c, b)
-                            end
+                            end,
+                            capabilities = capabilities,
                         })
                     end,
                     gopls = function()
@@ -360,6 +242,7 @@ return {
                             on_attach = function(c, b)
                                 attach(c, b)
                             end,
+                            capabilities = capabilities,
                             settings = {
                                 gopls = {
                                     hints = {
