@@ -246,8 +246,12 @@ return {
                     end,
                     volar = function()
                         lspc.volar.setup({
-                            capabilities = capabilities,
-                            on_attach = function(client, bufnr)
+                            init_options = {
+                                vue = {
+                                    hybridMode = false,
+                                },
+                            },
+                            on_attach = function (client, bufnr)
                                 client.server_capabilities.document_formatting = true
                                 client.server_capabilities.document_range_formatting = true
                                 vim.bo.tabstop = 2
@@ -256,31 +260,34 @@ return {
                                 vim.bo.softtabstop = 2
                                 attach(client, bufnr)
                             end,
-                            filetypes = { 'typescript', 'javascript', 'vue', 'json' },
-                            init_options = {
-                                vue = {
-                                    hybridMode = false,
+                            settings = {
+                                typescript = {
+                                    inlayHints = {
+                                        enumMemberValues = {
+                                            enabled = true,
+                                        },
+                                        functionLikeReturnTypes = {
+                                            enabled = true,
+                                        },
+                                        propertyDeclarationTypes = {
+                                            enabled = true,
+                                        },
+                                        parameterTypes = {
+                                            enabled = true,
+                                            suppressWhenArgumentMatchesName = true,
+                                        },
+                                        variableTypes = {
+                                            enabled = true,
+                                        },
+                                    },
                                 },
                             },
-                            root_dir = function()
-                                return vim.fn.getcwd();
-                            end
                         })
                     end,
                     ts_ls = function()
                         local vue_language_server_path = require("mason-registry").get_package("vue-language-server")
                             :get_install_path() .. "/node_modules/@vue/language-server"
                         lspc.ts_ls.setup({
-                            capabilities = capabilities,
-                            on_attach = function(client, bufnr)
-                                client.server_capabilities.document_formatting = true
-                                client.server_capabilities.document_range_formatting = true
-                                vim.bo.tabstop = 2
-                                vim.bo.shiftwidth = 2
-                                vim.bo.expandtab = true
-                                vim.bo.softtabstop = 2
-                                attach(client, bufnr)
-                            end,
                             init_options = {
                                 plugins = {
                                     {
@@ -290,9 +297,23 @@ return {
                                     },
                                 },
                             },
-                            root_dir = function()
-                                return vim.fn.getcwd();
-                            end
+                            settings = {
+                                typescript = {
+                                    tsserver = {
+                                        useSyntaxServer = false,
+                                    },
+                                    inlayHints = {
+                                        includeInlayParameterNameHints = 'all',
+                                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                                        includeInlayFunctionParameterTypeHints = true,
+                                        includeInlayVariableTypeHints = true,
+                                        includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                                        includeInlayPropertyDeclarationTypeHints = true,
+                                        includeInlayFunctionLikeReturnTypeHints = true,
+                                        includeInlayEnumMemberValueHints = true,
+                                    },
+                                },
+                            },
                         })
                     end,
                     html = function()
