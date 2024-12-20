@@ -58,7 +58,7 @@ return {
         sources = {
             default = { 'lsp', 'path', 'luasnip', 'buffer' },
             -- optionally disable cmdline completions
-            -- cmdline = {},
+            cmdline = {},
         },
 
         -- experimental signature help support
