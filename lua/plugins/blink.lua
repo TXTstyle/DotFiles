@@ -5,16 +5,11 @@ return {
         { 'L3MON4D3/LuaSnip',            version = 'v2.*' },
         { 'rafamadriz/friendly-snippets' },
     },
-
-    -- use a release tag to download pre-built binaries
     version = 'v0.*',
-
     opts = {
         -- 'default' for mappings similar to built-in completion
         -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
         -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
-        -- see the "default configuration" section below for full documentation on how to define
-        -- your own keymap.
         keymap = {
             preset = 'enter',
             ['<C-space>'] = {},
@@ -25,7 +20,6 @@ return {
             ['<C-f>'] = { 'snippet_forward', 'fallback' },
             ['<C-b>'] = { 'snippet_backward', 'fallback' },
         },
-
         appearance = {
             -- Sets the fallback highlight groups to nvim-cmp's highlight groups
             -- Useful for when your theme doesn't support blink.cmp
@@ -35,7 +29,6 @@ return {
             -- Adjusts spacing to ensure icons are aligned
             nerd_font_variant = 'mono'
         },
-
         snippets = {
             expand = function(snippet) require('luasnip').lsp_expand(snippet) end,
             active = function(filter)
@@ -46,15 +39,28 @@ return {
             end,
             jump = function(direction) require('luasnip').jump(direction) end,
         },
-
         completion = {
             list = {
                 selection = "preselect",
             },
+            menu = {
+                scrollbar = false,
+                draw = {
+                    columns = { { 'kind_icon' }, { 'label', 'label_description', fill = true, gap = 1 } },
+                },
+            },
+            documentation = {
+                auto_show = true,
+                auto_show_delay_ms = 250,
+                window = {
+                    scrollbar = false,
+                },
+            },
+            -- Displays a preview of the selected item on the current line
+            ghost_text = {
+                enabled = true,
+            },
         },
-
-        -- default list of enabled providers defined so that you can extend it
-        -- elsewhere in your config, without redefining it, via `opts_extend`
         sources = {
             default = { 'lsp', 'path', 'luasnip', 'buffer' },
             -- optionally disable cmdline completions
@@ -64,7 +70,5 @@ return {
         -- experimental signature help support
         -- signature = { enabled = true }
     },
-    -- allows extending the providers array elsewhere in your config
-    -- without having to redefine it
     opts_extend = { "sources.default" }
 }
