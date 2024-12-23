@@ -54,8 +54,6 @@ return {
             -- This is where all the LSP shenanigans will live
             local lsp_zero = require('lsp-zero')
 
-            lsp_zero.extend_lspconfig()
-
             local attach = function(_, bufnr)
                 local opts = { buffer = bufnr, remap = false }
                 vim.lsp.inlay_hint.enable(true, nil)
@@ -75,13 +73,13 @@ return {
                 vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
             end
 
-            lsp_zero.on_attach(function(client, bufnr)
-                attach(client, bufnr)
-            end)
+            local capabilities = require('blink.cmp').get_lsp_capabilities()
+            lsp_zero.extend_lspconfig({
+                lsp_attach = attach,
+                capabilities = capabilities,
+            })
 
             local lspc = require('lspconfig')
-
-            local capabilities = require('blink.cmp').get_lsp_capabilities()
 
             require('flutter-tools').setup({
                 lsp = {
@@ -201,7 +199,7 @@ return {
                     emmet_ls = function()
                         lspc.emmet_ls.setup({
                             capabilities = capabilities,
-                            filetypes = { 'html', 'vue', 'js', 'css', 'scss', 'sass' },
+                            filetypes = { 'html', 'js', 'css', 'scss', 'sass' },
                             root_dir = function()
                                 return vim.fn.getcwd();
                             end
@@ -219,8 +217,10 @@ return {
                         vim.g.rustacean = {
                             server = {
                                 capabilities = capabilities,
-                                on_attach = function(_, bufnr)
-                                    attach(_, bufnr);
+                                on_attach = function(client, bufnr)
+                                    client.cancel_request = function(_, _)
+                                    end
+                                    attach(client, bufnr);
                                 end
                             }
                         }
@@ -256,6 +256,16 @@ return {
                             },
                             root_dir = function()
                                 return vim.fn.getcwd()
+                            end,
+                        })
+                    end,
+                    glsl_analyzer = function()
+                        lspc.glsl_analyzer.setup({
+                            capabilities = capabilities,
+                            on_attach = function(client, buffer)
+                                client.cancel_request = function(_, _)
+                                end
+                                attach(client, buffer);
                             end,
                         })
                     end,

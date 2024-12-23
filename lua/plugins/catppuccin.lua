@@ -21,8 +21,7 @@ return {
             percentage = 0.85,
         },
         integrations = {
-            cmp = true,
-            -- blink = true,
+            blink_cmp = true,
             gitsigns = true,
             nvimtree = true,
             treesitter = true,
