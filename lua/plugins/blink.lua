@@ -25,24 +25,13 @@ return {
             -- Adjusts spacing to ensure icons are aligned
             nerd_font_variant = 'mono'
         },
-        snippets = {
-            expand = function(snippet) require('luasnip').lsp_expand(snippet) end,
-            active = function(filter)
-                if filter and filter.direction then
-                    return require('luasnip').jumpable(filter.direction)
-                end
-                return require('luasnip').in_snippet()
-            end,
-            jump = function(direction) require('luasnip').jump(direction) end,
-        },
+        snippets = { preset = 'luasnip' },
         completion = {
-            list = {
-                selection = "preselect",
-            },
+            list = { selection = { preselect = true , auto_insert = true } },
             menu = {
                 scrollbar = false,
                 draw = {
-                     columns = { { "kind_icon" }, { "label", gap = 1 } },
+                    columns = { { "kind_icon" }, { "label", gap = 1 } },
                     components = {
                         label = {
                             text = function(ctx)
@@ -68,7 +57,7 @@ return {
             },
         },
         sources = {
-            default = { 'lsp', 'path', 'luasnip', 'buffer' },
+            default = { 'lsp', 'path', 'snippets', 'buffer' },
             -- optionally disable cmdline completions
             cmdline = {},
         },
