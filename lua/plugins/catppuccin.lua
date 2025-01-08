@@ -13,6 +13,7 @@ return {
                 HarpoonInactive = { fg = colors.base, bg = colors.surface0 },
                 HarpoonNumberInactive = { fg = colors.base, bg = colors.surface0 },
                 TabLineFill = { fg = colors.base, bg = colors.base },
+                BlinkCmpLabelMatch = { fg = colors.none, bg = colors.none, bold = true },
             }
         end,
         dim_inactive = {
