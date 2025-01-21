@@ -18,6 +18,13 @@ return {
             return self.status
         end
 
+        local function getWords()
+            if vim.fn.mode() == "v" or vim.fn.mode() == "V" then
+                return tostring(vim.fn.wordcount().visual_words) .. " words"
+            end
+                return tostring(vim.fn.wordcount().words) .. " words"
+        end
+
         -- Put proper separators and gaps between components in sections
         local function process_sections(sections)
             for name, section in pairs(sections) do
@@ -92,7 +99,16 @@ return {
                 },
                 lualine_c = {},
                 lualine_x = {},
-                lualine_y = { 'filetype' },
+                lualine_y = {
+                    'filetype',
+                    {
+                        getWords,
+                        cond = function()
+                            local ftp = vim.bo.filetype
+                            return ftp == "typst" or ftp == "latex"
+                        end
+                    },
+                },
                 lualine_z = { '%l:%c', '%p%%/%L' },
             },
             inactive_sections = {
