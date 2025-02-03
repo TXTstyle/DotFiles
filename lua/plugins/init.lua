@@ -3,6 +3,7 @@ return {
     "elkowar/yuck.vim",
     'tikhomirov/vim-glsl',
     "sindrets/diffview.nvim",
+    'github/copilot.vim',
 
     {
         "rbong/vim-flog",
