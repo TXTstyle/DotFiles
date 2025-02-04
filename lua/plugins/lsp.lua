@@ -23,30 +23,35 @@ return {
         event = { 'BufReadPre', 'BufNewFile' },
         dependencies = {
             { 'williamboman/mason-lspconfig.nvim' },
-            { "https://git.sr.ht/~whynothugo/lsp_lines.nvim" },
         },
         opts = {
             inlay_hint = { enable = true },
         },
         config = function()
+            vim.g.diagnostics_on = false
+            local notify = require('notify')
             -- function to toggle "normal" diagnostics or lsp-lines diagnostics.
             local function toggle_diagnostics()
-                local diagnostics_on = require("lsp_lines").toggle()
-                if diagnostics_on then
+                vim.g.diagnostics_on = not vim.g.diagnostics_on
+                if vim.g.diagnostics_on then
                     vim.diagnostic.config({
-                        virtual_text = false,
-                    })
-                else
-                    vim.diagnostic.config({
-                        virtual_text = {
-                            enable = true,
-                            spacing = 8,
-                            prefix = "●",
+                        virtual_lines = {
                             severity = {
                                 min = "ERROR",
                             }
                         },
+
                     })
+                    notify("Warnings disabled")
+                else
+                    vim.diagnostic.config({
+                        virtual_lines = {
+                            severity = {
+                                min = "HINT",
+                            }
+                        },
+                    })
+                    notify("Warnings enabled")
                 end
             end
 
@@ -58,8 +63,8 @@ return {
                 local opts = { buffer = bufnr, remap = false }
                 vim.lsp.inlay_hint.enable(true, nil)
 
-                vim.keymap.set("n", "<Leader>td", toggle_diagnostics,
-                    { desc = "Toggle lsp_lines", buffer = bufnr, remap = false })
+                vim.keymap.set("n", "<Leader>tw", toggle_diagnostics,
+                    { desc = "Toggle Warnings", buffer = bufnr, remap = false })
                 vim.keymap.set("n", "<A-f>", function() vim.lsp.buf.format() end, opts)
                 vim.keymap.set("n", "ƒ", function() vim.lsp.buf.format() end, opts)
                 vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
@@ -293,8 +298,6 @@ return {
                     end
                 }
             })
-
-            require("lsp_lines").setup()
         end
     }
 }

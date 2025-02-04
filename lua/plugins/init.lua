@@ -30,7 +30,6 @@ return {
 
     'pest-parser/pest.vim',
 
-    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
