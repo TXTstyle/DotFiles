@@ -27,7 +27,7 @@ return {
         },
         snippets = { preset = 'luasnip' },
         completion = {
-            list = { selection = { preselect = true , auto_insert = true } },
+            list = { selection = { preselect = true, auto_insert = true } },
             menu = {
                 scrollbar = false,
                 draw = {
@@ -58,8 +58,9 @@ return {
         },
         sources = {
             default = { 'lsp', 'path', 'snippets', 'buffer' },
-            -- optionally disable cmdline completions
-            cmdline = {},
+        },
+        cmdline = {
+            sources = {},
         },
 
         -- experimental signature help support
