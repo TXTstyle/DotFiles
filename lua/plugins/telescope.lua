@@ -13,7 +13,7 @@ return {
 
         t.setup {
             defaults = {
-                file_ignore_patterns = { "node_modules", "target" },
+                file_ignore_patterns = { "node_modules", "target", "vendor" },
                 path_display = { 'smart' },
                 -- border = false,
                 mappings = {

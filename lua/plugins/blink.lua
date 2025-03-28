@@ -5,7 +5,7 @@ return {
         { 'L3MON4D3/LuaSnip',            version = 'v2.*' },
         { 'rafamadriz/friendly-snippets' },
     },
-    version = 'v0.*',
+    version = 'v1.*',
     opts = {
         -- 'default' for mappings similar to built-in completion
         -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
@@ -59,9 +59,8 @@ return {
         sources = {
             default = { 'lsp', 'path', 'snippets', 'buffer' },
         },
-        cmdline = {
-            sources = {},
-        },
+        -- Disable cmdline
+        cmdline = { enabled = false },
 
         -- experimental signature help support
         -- signature = { enabled = true }
