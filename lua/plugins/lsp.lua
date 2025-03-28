@@ -26,6 +26,15 @@ return {
         },
         opts = {
             inlay_hint = { enable = true },
+            servers = {
+                clangd = {
+                    mason = function()
+                        if not jit.os == "OSX" then
+                            return false
+                        end
+                    end
+                }
+            }
         },
         config = function()
             vim.g.diagnostics_on = false
