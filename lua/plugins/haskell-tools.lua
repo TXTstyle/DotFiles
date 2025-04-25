@@ -1,12 +1,13 @@
-return {
-    'mrcjkb/haskell-tools.nvim',
-    version = '^4', -- Recommended
-    lazy = false,   -- This plugin is already lazy
-    ft = {
-        'hs',
-        'hsig',
-        'hsc',
-        'lhs',
-        'hsi',
-    },
-}
+return {}
+-- return {
+--     'mrcjkb/haskell-tools.nvim',
+--     version = '^4', -- Recommended
+--     lazy = false,   -- This plugin is already lazy
+--     ft = {
+--         'hs',
+--         'hsig',
+--         'hsc',
+--         'lhs',
+--         'hsi',
+--     },
+-- }
