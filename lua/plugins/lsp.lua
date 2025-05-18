@@ -93,8 +93,6 @@ return {
                 capabilities = capabilities,
             })
 
-            local lspc = require('lspconfig')
-
             require('flutter-tools').setup({
                 lsp = {
                     capabilities = capabilities,
@@ -106,6 +104,185 @@ return {
                         attach(client, bufnr)
                     end,
                 },
+            })
+
+            vim.lsp.config('clangd', {
+                inlayHints = {
+                    functionReturnTypes = true,
+                    variableTypes = true,
+                },
+                on_attach = function(c, b)
+                    local clangd = require('lspconfig.configs.clangd').commands.ClangdSwitchSourceHeader[1];
+                    local opts = { buffer = b, remap = false, desc = "Switch Source Header" }
+                    vim.keymap.set("n", "<Leader>r", clangd, opts)
+                    attach(c, b)
+                end,
+                capabilities = capabilities,
+            })
+
+            vim.lsp.config('pylsp', {
+                capabilities = capabilities,
+                on_attach = function(client, bufnr)
+                    client.server_capabilities.document_formatting = true
+                    client.server_capabilities.document_range_formatting = true
+                    vim.bo.tabstop = 2
+                    vim.bo.shiftwidth = 2
+                    vim.bo.expandtab = true
+                    vim.bo.softtabstop = 2
+                    attach(client, bufnr)
+                end,
+            })
+
+            vim.g.rustacean = {
+                server = {
+                    capabilities = capabilities,
+                    on_attach = function(client, bufnr)
+                        client.cancel_request = function(_, _)
+                        end
+                        attach(client, bufnr);
+                    end
+                }
+            }
+
+            vim.lsp.config('volar', {
+                init_options = {
+                    vue = {
+                        hybridMode = false,
+                    },
+                },
+                capabilities = capabilities,
+                on_attach = function(client, bufnr)
+                    client.server_capabilities.document_formatting = true
+                    client.server_capabilities.document_range_formatting = true
+                    vim.bo.tabstop = 2
+                    vim.bo.shiftwidth = 2
+                    vim.bo.expandtab = true
+                    vim.bo.softtabstop = 2
+                    attach(client, bufnr)
+                end,
+                settings = {
+                    typescript = {
+                        inlayHints = {
+                            enumMemberValues = {
+                                enabled = true,
+                            },
+                            functionLikeReturnTypes = {
+                                enabled = true,
+                            },
+                            propertyDeclarationTypes = {
+                                enabled = true,
+                            },
+                            parameterTypes = {
+                                enabled = true,
+                                suppressWhenArgumentMatchesName = true,
+                            },
+                            variableTypes = {
+                                enabled = true,
+                            },
+                        },
+                    },
+                },
+            })
+
+            local vue_language_server_path = require("mason-registry").get_package("vue-language-server")
+            :get_installed_version() .. "/node_modules/@vue/language-server"
+            vim.lsp.config('ts_ls', {
+                init_options = {
+                    plugins = {
+                        {
+                            name = '@vue/typescript-plugin',
+                            location = vue_language_server_path,
+                            languages = { 'vue' },
+                        },
+                    },
+                },
+                capabilities = capabilities,
+                settings = {
+                    typescript = {
+                        tsserver = {
+                            useSyntaxServer = false,
+                        },
+                        inlayHints = {
+                            includeInlayParameterNameHints = 'all',
+                            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                            includeInlayFunctionParameterTypeHints = true,
+                            includeInlayVariableTypeHints = true,
+                            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                            includeInlayPropertyDeclarationTypeHints = true,
+                            includeInlayFunctionLikeReturnTypeHints = true,
+                            includeInlayEnumMemberValueHints = true,
+                        },
+                    },
+                },
+                on_attach = function(client, bufnr)
+                    vim.bo.tabstop = 2
+                    vim.bo.shiftwidth = 2
+                    vim.bo.expandtab = true
+                    vim.bo.softtabstop = 2
+                    attach(client, bufnr)
+                end,
+            })
+            vim.lsp.config('html', {
+                capabilities = capabilities,
+                on_attach = function(client, bufnr)
+                    client.server_capabilities.document_formatting = true
+                    client.server_capabilities.document_range_formatting = true
+                    vim.bo.tabstop = 2
+                    vim.bo.shiftwidth = 2
+                    vim.bo.expandtab = true
+                    vim.bo.softtabstop = 2
+                    attach(client, bufnr)
+                end,
+            })
+
+            vim.lsp.config('emmet_ls', {
+                capabilities = capabilities,
+                filetypes = { 'html', 'js', 'css', 'scss', 'sass' },
+                root_dir = function()
+                    return vim.fn.getcwd();
+                end,
+                on_attach = attach,
+            })
+
+            vim.lsp.config('eslint', {
+                root_dir = function()
+                    return vim.fn.getcwd();
+                end,
+                capabilities = capabilities,
+                on_attach = attach,
+            })
+
+            vim.lsp.config('gopls', {
+                on_attach = function(c, b)
+                    attach(c, b)
+                end,
+                capabilities = capabilities,
+                settings = {
+                    gopls = {
+                        hints = {
+                            assignVariableTypes = true,
+                            compositeLiteralFields = true,
+                            compositeLiteralTypes = true,
+                            constantValues = true,
+                            functionTypeParameters = true,
+                            parameterNames = true,
+                            rangeVariableTypes = true,
+                        },
+                    },
+                },
+                root_dir = function()
+                    return vim.fn.getcwd()
+                end,
+            })
+
+            vim.lsp.config('glsl_analyzer', {
+                capabilities = capabilities,
+                on_attach = function(client, buffer)
+                    client.cancel_request = function(_, _)
+                    end
+                    attach(client, buffer);
+                end,
+
             })
 
             require('mason-lspconfig').setup({
@@ -122,162 +299,6 @@ return {
                 automatic_enable = true,
                 automatic_installation = true,
                 handlers = {
-                    lsp_zero.default_setup,
-                    volar = function()
-                        lspc.volar.setup({
-                            init_options = {
-                                vue = {
-                                    hybridMode = false,
-                                },
-                            },
-                            capabilities = capabilities,
-                            on_attach = function(client, bufnr)
-                                client.server_capabilities.document_formatting = true
-                                client.server_capabilities.document_range_formatting = true
-                                vim.bo.tabstop = 2
-                                vim.bo.shiftwidth = 2
-                                vim.bo.expandtab = true
-                                vim.bo.softtabstop = 2
-                                attach(client, bufnr)
-                            end,
-                            settings = {
-                                typescript = {
-                                    inlayHints = {
-                                        enumMemberValues = {
-                                            enabled = true,
-                                        },
-                                        functionLikeReturnTypes = {
-                                            enabled = true,
-                                        },
-                                        propertyDeclarationTypes = {
-                                            enabled = true,
-                                        },
-                                        parameterTypes = {
-                                            enabled = true,
-                                            suppressWhenArgumentMatchesName = true,
-                                        },
-                                        variableTypes = {
-                                            enabled = true,
-                                        },
-                                    },
-                                },
-                            },
-                        })
-                    end,
-                    ts_ls = function()
-                        local vue_language_server_path = require("mason-registry").get_package("vue-language-server")
-                            :get_install_path() .. "/node_modules/@vue/language-server"
-                        lspc.ts_ls.setup({
-                            init_options = {
-                                plugins = {
-                                    {
-                                        name = '@vue/typescript-plugin',
-                                        location = vue_language_server_path,
-                                        languages = { 'vue' },
-                                    },
-                                },
-                            },
-                            capabilities = capabilities,
-                            settings = {
-                                typescript = {
-                                    tsserver = {
-                                        useSyntaxServer = false,
-                                    },
-                                    inlayHints = {
-                                        includeInlayParameterNameHints = 'all',
-                                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                                        includeInlayFunctionParameterTypeHints = true,
-                                        includeInlayVariableTypeHints = true,
-                                        includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-                                        includeInlayPropertyDeclarationTypeHints = true,
-                                        includeInlayFunctionLikeReturnTypeHints = true,
-                                        includeInlayEnumMemberValueHints = true,
-                                    },
-                                },
-                            },
-                        })
-                    end,
-                    html = function()
-                        lspc.html.setup({
-                            capabilities = capabilities,
-                        })
-                    end,
-                    emmet_ls = function()
-                        lspc.emmet_ls.setup({
-                            capabilities = capabilities,
-                            filetypes = { 'html', 'js', 'css', 'scss', 'sass' },
-                            root_dir = function()
-                                return vim.fn.getcwd();
-                            end
-                        })
-                    end,
-                    eslint = function()
-                        lspc.eslint.setup({
-                            root_dir = function()
-                                return vim.fn.getcwd();
-                            end,
-                            capabilities = capabilities,
-                        })
-                    end,
-                    rust_analyzer = function()
-                        vim.g.rustacean = {
-                            server = {
-                                capabilities = capabilities,
-                                on_attach = function(client, bufnr)
-                                    client.cancel_request = function(_, _)
-                                    end
-                                    attach(client, bufnr);
-                                end
-                            }
-                        }
-                    end,
-                    clangd = function()
-                        lspc.clangd.setup({
-                            on_attach = function(c, b)
-                                local opts = { buffer = b, remap = false, desc = "Switch Source Header" }
-                                vim.keymap.set("n", "<Leader>r", function() vim.cmd("LspClangdSwitchSourceHeader") end, opts)
-                                attach(c, b)
-                            end,
-                            capabilities = capabilities,
-                        })
-                    end,
-                    gopls = function()
-                        lspc.gopls.setup({
-                            on_attach = function(c, b)
-                                attach(c, b)
-                            end,
-                            capabilities = capabilities,
-                            settings = {
-                                gopls = {
-                                    hints = {
-                                        assignVariableTypes = true,
-                                        compositeLiteralFields = true,
-                                        compositeLiteralTypes = true,
-                                        constantValues = true,
-                                        functionTypeParameters = true,
-                                        parameterNames = true,
-                                        rangeVariableTypes = true,
-                                    },
-                                },
-                            },
-                            root_dir = function()
-                                return vim.fn.getcwd()
-                            end,
-                        })
-                    end,
-                    glsl_analyzer = function()
-                        lspc.glsl_analyzer.setup({
-                            capabilities = capabilities,
-                            on_attach = function(client, buffer)
-                                client.cancel_request = function(_, _)
-                                end
-                                attach(client, buffer);
-                            end,
-                        })
-                    end,
-                    pest_ls = function()
-                        require("pest-vim").setup {}
-                    end,
                     hls = function()
                         -- local ht = require('haskell-tools')
                         -- local bufnr = vim.api.nvim_get_current_buf()
