@@ -119,18 +119,10 @@ return {
                     -- 'eslint',
                     'cssls',
                 },
+                automatic_enable = true,
+                automatic_installation = true,
                 handlers = {
                     lsp_zero.default_setup,
-                    lua_ls = function()
-                        local lua_opts = lsp_zero.nvim_lua_ls({
-                            settings = {
-                                Lua = {
-                                    hint = { enable = true }
-                                }
-                            }
-                        })
-                        lspc.lua_ls.setup(lua_opts)
-                    end,
                     volar = function()
                         lspc.volar.setup({
                             init_options = {
@@ -243,7 +235,7 @@ return {
                         lspc.clangd.setup({
                             on_attach = function(c, b)
                                 local opts = { buffer = b, remap = false, desc = "Switch Source Header" }
-                                vim.keymap.set("n", "<Leader>r", function() vim.cmd('ClangdSwitchSourceHeader') end, opts)
+                                vim.keymap.set("n", "<Leader>r", function() vim.cmd("LspClangdSwitchSourceHeader") end, opts)
                                 attach(c, b)
                             end,
                             capabilities = capabilities,
