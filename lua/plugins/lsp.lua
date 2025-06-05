@@ -144,7 +144,7 @@ return {
                 }
             }
 
-            vim.lsp.config('volar', {
+            vim.lsp.config('vue_ls', {
                 init_options = {
                     vue = {
                         hybridMode = false,
@@ -184,14 +184,12 @@ return {
                 },
             })
 
-            local vue_language_server_path = require("mason-registry").get_package("vue-language-server")
-            :get_installed_version() .. "/node_modules/@vue/language-server"
             vim.lsp.config('ts_ls', {
                 init_options = {
                     plugins = {
                         {
                             name = '@vue/typescript-plugin',
-                            location = vue_language_server_path,
+                            location = vim.fn.expand("$MASON") .. "/packages/vue-language-server/node_modules/@vue/language-server",
                             languages = { 'vue' },
                         },
                     },
@@ -287,14 +285,13 @@ return {
 
             require('mason-lspconfig').setup({
                 ensure_installed = {
-                    'volar',
-                    'rust_analyzer',
-                    'pylsp',
-                    'clangd',
                     'lua_ls',
+                    'vue_ls',
+                    'rust_analyzer',
+                    'clangd',
                     'emmet_ls',
-                    -- 'eslint',
                     'cssls',
+                    'tinymist',
                 },
                 automatic_enable = true,
                 automatic_installation = true,
