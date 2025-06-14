@@ -283,6 +283,12 @@ return {
 
             })
 
+            vim.lsp.config('qmlls', {
+                capabilities = capabilities,
+                cmd = { 'qmlls6', '-E' },
+            })
+            vim.lsp.enable('qmlls')
+
             require('mason-lspconfig').setup({
                 ensure_installed = {
                     'lua_ls',
