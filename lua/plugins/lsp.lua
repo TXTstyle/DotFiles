@@ -133,16 +133,37 @@ return {
                 end,
             })
 
-            vim.g.rustacean = {
-                server = {
-                    capabilities = capabilities,
-                    on_attach = function(client, bufnr)
-                        client.cancel_request = function(_, _)
-                        end
-                        attach(client, bufnr);
+            vim.lsp.config('rust_analyzer', {
+                capabilities = capabilities,
+                on_attach = function(client, bufnr)
+                    client.cancel_request = function(_, _)
                     end
-                }
-            }
+                    attach(client, bufnr);
+                end,
+                settings = {
+                    ['rust-analyzer'] = {
+                        check = {
+                            command = 'clippy',
+                            extraArgs = { '--no-deps' },
+                        },
+                        checkOnSave = true,
+                        inlayHints = {
+                            bindingModeHints = {
+                                enable = true,
+                            },
+                            closureReturnTypeHints = {
+                                enable = true,
+                            },
+                            lifetimeElisionHints = {
+                                enable = 'always',
+                            },
+                            typeHints = {
+                                enable = true,
+                            },
+                        },
+                    },
+                },
+            })
 
             vim.lsp.config('vue_ls', {
                 init_options = {
@@ -189,7 +210,8 @@ return {
                     plugins = {
                         {
                             name = '@vue/typescript-plugin',
-                            location = vim.fn.expand("$MASON") .. "/packages/vue-language-server/node_modules/@vue/language-server",
+                            location = vim.fn.expand("$MASON") ..
+                                "/packages/vue-language-server/node_modules/@vue/language-server",
                             languages = { 'vue' },
                         },
                     },
@@ -293,7 +315,7 @@ return {
                 ensure_installed = {
                     'lua_ls',
                     'vue_ls',
-                    'rust_analyzer',
+                    -- 'rust_analyzer',
                     'clangd',
                     'emmet_ls',
                     'cssls',
