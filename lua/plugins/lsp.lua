@@ -106,7 +106,16 @@ return {
                 },
             })
 
+            local clangd_cmd = function()
+                if jit.os == "OSX" then
+                    return { 'clangd' }
+                else
+                    return { 'clangd', '--query-driver=/usr/bin/*gcc' }
+                end
+            end
+
             vim.lsp.config('clangd', {
+                cmd = clangd_cmd(),
                 inlayHints = {
                     functionReturnTypes = true,
                     variableTypes = true,
