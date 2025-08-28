@@ -173,84 +173,46 @@ return {
                     },
                 },
             })
-
-            vim.lsp.config('vue_ls', {
-                init_options = {
-                    vue = {
-                        hybridMode = false,
-                    },
-                },
-                capabilities = capabilities,
-                on_attach = function(client, bufnr)
-                    client.server_capabilities.document_formatting = true
-                    client.server_capabilities.document_range_formatting = true
-                    vim.bo.tabstop = 2
-                    vim.bo.shiftwidth = 2
-                    vim.bo.expandtab = true
-                    vim.bo.softtabstop = 2
-                    attach(client, bufnr)
-                end,
+            local vue_language_server_path = vim.fn.expand '$MASON/packages' ..
+                '/vue-language-server' .. '/node_modules/@vue/language-server'
+            local tsserver_filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' }
+            local vue_plugin = {
+                name = '@vue/typescript-plugin',
+                location = vue_language_server_path,
+                languages = { 'vue' },
+                configNamespace = 'typescript',
+            }
+            local vtsls_config = {
                 settings = {
-                    typescript = {
-                        inlayHints = {
-                            enumMemberValues = {
-                                enabled = true,
-                            },
-                            functionLikeReturnTypes = {
-                                enabled = true,
-                            },
-                            propertyDeclarationTypes = {
-                                enabled = true,
-                            },
-                            parameterTypes = {
-                                enabled = true,
-                                suppressWhenArgumentMatchesName = true,
-                            },
-                            variableTypes = {
-                                enabled = true,
+                    vtsls = {
+                        tsserver = {
+                            globalPlugins = {
+                                vue_plugin,
                             },
                         },
                     },
                 },
-            })
+                filetypes = tsserver_filetypes,
+            }
 
-            vim.lsp.config('ts_ls', {
+            local ts_ls_config = {
                 init_options = {
                     plugins = {
-                        {
-                            name = '@vue/typescript-plugin',
-                            location = vim.fn.expand("$MASON") ..
-                                "/packages/vue-language-server/node_modules/@vue/language-server",
-                            languages = { 'vue' },
-                        },
+                        vue_plugin,
                     },
                 },
-                capabilities = capabilities,
-                settings = {
-                    typescript = {
-                        tsserver = {
-                            useSyntaxServer = false,
-                        },
-                        inlayHints = {
-                            includeInlayParameterNameHints = 'all',
-                            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                            includeInlayFunctionParameterTypeHints = true,
-                            includeInlayVariableTypeHints = true,
-                            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-                            includeInlayPropertyDeclarationTypeHints = true,
-                            includeInlayFunctionLikeReturnTypeHints = true,
-                            includeInlayEnumMemberValueHints = true,
-                        },
-                    },
-                },
-                on_attach = function(client, bufnr)
-                    vim.bo.tabstop = 2
-                    vim.bo.shiftwidth = 2
-                    vim.bo.expandtab = true
-                    vim.bo.softtabstop = 2
-                    attach(client, bufnr)
-                end,
-            })
+                filetypes = tsserver_filetypes,
+            }
+
+            -- If you are on most recent `nvim-lspconfig`
+            local vue_ls_config = {}
+            vim.lsp.config('vtsls', vtsls_config)
+            vim.lsp.config('vue_ls', vue_ls_config)
+            vim.lsp.config('ts_ls', ts_ls_config)
+            vim.lsp.enable({ 'vtsls', 'vue_ls' }) -- If using `ts_ls` replace `vtsls` to `ts_ls`
+            local lspconfig = require('lspconfig')
+            lspconfig.vtsls.setup(vtsls_config)
+
             vim.lsp.config('html', {
                 capabilities = capabilities,
                 on_attach = function(client, bufnr)
