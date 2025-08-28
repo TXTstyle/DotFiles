@@ -28,9 +28,9 @@ return {
             treesitter = true,
             notify = true,
             harpoon = true,
-            barbecue = {
-                bold_basename = true,
-                dim_context = true,
+            dropbar = {
+                enabled = true,
+                color_mode = true,
             },
             fidget = true,
             indent_blankline = {
