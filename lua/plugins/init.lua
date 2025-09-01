@@ -4,6 +4,10 @@ return {
     'tikhomirov/vim-glsl',
     "sindrets/diffview.nvim",
     'github/copilot.vim',
+    {
+        "jasonpanosso/harpoon-tabline.nvim",
+        dependencies = { "ThePrimeagen/harpoon" }
+    },
 
     {
         "rbong/vim-flog",
