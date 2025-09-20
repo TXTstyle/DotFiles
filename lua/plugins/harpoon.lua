@@ -8,7 +8,12 @@ return {
     config = function()
         local harpoon = require("harpoon")
 
-        harpoon:setup()
+        harpoon:setup({
+            settings = {
+                save_on_toggle = true,
+                sync_on_ui_close = true,
+            }
+        })
 
         require("harpoon-tabline").setup({
             use_editor_color_scheme = false,
