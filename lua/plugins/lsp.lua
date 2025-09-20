@@ -114,7 +114,7 @@ return {
                 end
             end
 
-            vim.lsp.config('clangd', {
+            local vanilla_clangd = {
                 cmd = clangd_cmd(),
                 inlayHints = {
                     functionReturnTypes = true,
@@ -127,7 +127,23 @@ return {
                     attach(c, b)
                 end,
                 capabilities = capabilities,
-            })
+            }
+
+            local function clangd_profile()
+                -- If 'esp' in path, set clangd to use esp-idf clagnd
+                local cwd = vim.fn.getcwd()
+                if string.find(cwd, "esp") then
+                    local esp_clangd = require('esp32').lsp_config()
+                    esp_clangd.on_attach = vanilla_clangd.on_attach
+                    esp_clangd.inlayHints = vanilla_clangd.inlayHints
+                    require('lspconfig').clangd.setup(esp_clangd)
+                    return esp_clangd
+                else
+                    return vanilla_clangd
+                end
+            end
+
+            vim.lsp.config("clangd", clangd_profile())
 
             vim.lsp.config('pylsp', {
                 capabilities = capabilities,
@@ -209,9 +225,8 @@ return {
             vim.lsp.config('vtsls', vtsls_config)
             vim.lsp.config('vue_ls', vue_ls_config)
             vim.lsp.config('ts_ls', ts_ls_config)
+            vim.lsp.config('vtsls', vtsls_config)
             vim.lsp.enable({ 'vtsls', 'vue_ls' }) -- If using `ts_ls` replace `vtsls` to `ts_ls`
-            local lspconfig = require('lspconfig')
-            lspconfig.vtsls.setup(vtsls_config)
 
             vim.lsp.config('html', {
                 capabilities = capabilities,
