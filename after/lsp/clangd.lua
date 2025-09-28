@@ -64,7 +64,7 @@ end
 ---@type vim.lsp.Config
 return {
     cmd = {
-        '/Users/oskar/.espressif/tools/esp-clang/esp-19.1.2_20250312/esp-clang/bin/clangd',
+        os.getenv('HOME') .. '/.espressif/tools/esp-clang/esp-19.1.2_20250312/esp-clang/bin/clangd',
         "--compile-commands-dir=build.clang",
         "--background-index",
         "--clang-tidy",
