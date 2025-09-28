@@ -32,8 +32,8 @@ return {
                         if not jit.os == "OSX" then
                             return false
                         end
-                    end
-                }
+                    end,
+                },
             }
         },
         config = function()
@@ -107,10 +107,17 @@ return {
             })
 
             local clangd_cmd = function()
+                local cmd = {
+                    'clangd',
+                    '--background-index',
+                    "--clang-tidy",
+                    "--completion-style=detailed",
+                }
                 if jit.os == "OSX" then
-                    return { 'clangd' }
+                    return cmd
                 else
-                    return { 'clangd', '--query-driver=/usr/bin/*gcc' }
+                    table.insert(cmd, '--query-driver=/usr/bin/*gcc')
+                    return cmd
                 end
             end
 
@@ -119,6 +126,7 @@ return {
                 inlayHints = {
                     functionReturnTypes = true,
                     variableTypes = true,
+                    parameterNames = true,
                 },
                 on_attach = function(c, b)
                     local clangd = require('lspconfig.configs.clangd').commands.ClangdSwitchSourceHeader[1];
@@ -129,21 +137,11 @@ return {
                 capabilities = capabilities,
             }
 
-            local function clangd_profile()
-                -- If 'esp' in path, set clangd to use esp-idf clagnd
-                local cwd = vim.fn.getcwd()
-                if string.find(cwd, "esp") then
-                    local esp_clangd = require('esp32').lsp_config()
-                    esp_clangd.on_attach = vanilla_clangd.on_attach
-                    esp_clangd.inlayHints = vanilla_clangd.inlayHints
-                    require('lspconfig').clangd.setup(esp_clangd)
-                    return esp_clangd
-                else
-                    return vanilla_clangd
-                end
+            local cwd = vim.fn.getcwd()
+            if not string.find(cwd, "esp") then
+                vim.lsp.config('clangd', vanilla_clangd)
             end
-
-            vim.lsp.config("clangd", clangd_profile())
+            vim.lsp.enable('clangd')
 
             vim.lsp.config('pylsp', {
                 capabilities = capabilities,
@@ -300,36 +298,10 @@ return {
             require('mason-lspconfig').setup({
                 ensure_installed = {
                     'lua_ls',
-                    'vue_ls',
-                    -- 'rust_analyzer',
-                    'clangd',
-                    'emmet_ls',
-                    'cssls',
                     'tinymist',
                 },
                 automatic_enable = true,
                 automatic_installation = true,
-                handlers = {
-                    hls = function()
-                        -- local ht = require('haskell-tools')
-                        -- local bufnr = vim.api.nvim_get_current_buf()
-                        -- local opts = { noremap = true, silent = true, buffer = bufnr, }
-                        -- -- haskell-language-server relies heavily on codeLenses,
-                        -- -- so auto-refresh (see advanced configuration) is enabled by default
-                        -- vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
-                        -- -- Hoogle search for the type signature of the definition under the cursor
-                        -- vim.keymap.set('n', '<leader>hs', ht.hoogle.hoogle_signature, opts)
-                        -- -- Evaluate all code snippets
-                        -- vim.keymap.set('n', '<leader>ea', ht.lsp.buf_eval_all, opts)
-                        -- -- Toggle a GHCi repl for the current package
-                        -- vim.keymap.set('n', '<leader>rr', ht.repl.toggle, opts)
-                        -- -- Toggle a GHCi repl for the current buffer
-                        -- vim.keymap.set('n', '<leader>rf', function()
-                        --     ht.repl.toggle(vim.api.nvim_buf_get_name(0))
-                        -- end, opts)
-                        -- vim.keymap.set('n', '<leader>rq', ht.repl.quit, opts)
-                    end
-                }
             })
         end
     }

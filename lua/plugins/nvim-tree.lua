@@ -2,7 +2,6 @@ return {
     'nvim-tree/nvim-tree.lua',
     cmd = "NvimTreeToggle",
     keys = {
-        { "<leader>pv", vim.cmd.NvimTreeFindFile, desc = "tree open file" },
         {
             "<leader>b",
             function()
@@ -23,20 +22,17 @@ return {
         vim.g.loaded_netrw = 1
         vim.g.loaded_netrwPlugin = 1
     end,
-    config = function()
-        require("nvim-tree").setup({
-            sort_by = "case_sensitive",
-            view = {
-                adaptive_size = true,
-                side = "right",
-            },
-            renderer = {
-                group_empty = true,
-            },
-            filters = {
-                dotfiles = true,
-            },
-        })
-    end
-
+    opts = {
+        sort_by = "case_sensitive",
+        view = {
+            adaptive_size = true,
+            side = "right",
+        },
+        renderer = {
+            group_empty = true,
+        },
+        filters = {
+            dotfiles = true,
+        },
+    }
 }

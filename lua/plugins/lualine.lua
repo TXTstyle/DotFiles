@@ -75,7 +75,7 @@ return {
                         'diagnostics',
                         source = { 'nvim' },
                         sections = { 'warn' },
-                        diagnostics_color = { warn = { bg = colors.orange, fg = colors.base } },
+                        diagnostics_color = { warn = { bg = colors.peach, fg = colors.base } },
                     },
                     { modified, color = { bg = colors.red } },
                     {
