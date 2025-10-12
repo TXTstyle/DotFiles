@@ -2,7 +2,6 @@ return {
     'saghen/blink.cmp',
     lazy = false, -- lazy loading handled internally
     dependencies = {
-        { 'L3MON4D3/LuaSnip',            version = 'v2.*' },
         { 'rafamadriz/friendly-snippets' },
     },
     version = 'v1.*',
@@ -25,7 +24,6 @@ return {
             -- Adjusts spacing to ensure icons are aligned
             nerd_font_variant = 'mono'
         },
-        snippets = { preset = 'luasnip' },
         completion = {
             list = { selection = { preselect = true, auto_insert = true } },
             menu = {
@@ -63,8 +61,16 @@ return {
                     name = 'LazyDev',
                     module = 'lazydev.integrations.blink',
                     score_offset = 100,
+                },
+                snippets = {
+                    opts = {
+                        friendly_snippets = true,
+                        extended_filetypes = {
+                            vue = { 'vue' },
+                        }
+                    }
                 }
-            }
+            },
         },
         -- Disable cmdline
         cmdline = { enabled = false },
