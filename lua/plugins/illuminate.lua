@@ -7,5 +7,6 @@ return {
                 'treesitter'
             }
         })
-    end
+    end,
+    event = { "BufReadPost", "BufNewFile" },
 }

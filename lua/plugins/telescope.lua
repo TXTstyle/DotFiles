@@ -103,16 +103,14 @@ return {
 
             return layout
         end
-
-
-        vim.keymap.set('n', '<Leader>f', function()
-            builtin.find_files()
-        end)
-        vim.keymap.set('n', '<C-p>', function()
-            builtin.git_files()
-        end, {})
-        vim.keymap.set('n', '<Leader>gp', builtin.live_grep)
-
-        vim.keymap.set("n", "<leader>cd", t.extensions.zoxide.list)
-    end
+    end,
+    cmd = "Telescope",
+    keys = {
+        { "<leader>f", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+        { "<C-p>", "<cmd>Telescope git_files<cr>", desc = "Git files" },
+        { "<leader>gp", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
+        { "<leader>cd", "<cmd>Telescope zoxide list<cr>", desc = "Zoxide list" },
+    },
+    lazy = true,
+    event = "VeryLazy",
 }

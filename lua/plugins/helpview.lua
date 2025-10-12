@@ -3,5 +3,5 @@ return {
     depends = {
         { "catppuccino/nvim" },
     },
-    lazy = false,
+    event = "VeryLazy",
 };
