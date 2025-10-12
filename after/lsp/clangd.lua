@@ -65,6 +65,7 @@ end
 return {
     cmd = {
         os.getenv('HOME') .. '/.espressif/tools/esp-clang/esp-19.1.2_20250312/esp-clang/bin/clangd',
+        "--query-driver=" .. os.getenv('HOME') .. '/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/*gcc',
         "--compile-commands-dir=build.clang",
         "--background-index",
         "--clang-tidy",
