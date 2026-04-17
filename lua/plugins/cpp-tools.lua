@@ -1,6 +1,6 @@
 return {
     "Badhi/nvim-treesitter-cpp-tools",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    -- dependencies = { "nvim-treesitter/nvim-treesitter" },
     cmd = { "TSCppDefineClassFunc", "TSCppMakeConcreteClass", "TSCppRuleOf3", "TSCppRuleOf5" },
     opts = {
         preview = {

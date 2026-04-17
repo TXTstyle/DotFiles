@@ -1,8 +1,5 @@
 return {
-    'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
-    branch = 'main',
-    lazy = false,
+  "romus204/tree-sitter-manager.nvim",
     opts = {
         -- A list of parser names, or "all" (the four listed parsers should always be installed)
         ensure_installed = { "c", "rust", "javascript", "cpp", "c_sharp", "vue", "lua", "vim", "vimdoc" },
