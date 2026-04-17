@@ -274,10 +274,8 @@ return {
                         },
                     },
                 },
-                root_dir = function()
-                    return vim.fn.getcwd()
-                end,
             })
+            vim.lsp.enable('gopls')
 
             vim.lsp.config('glsl_analyzer', {
                 capabilities = capabilities,
