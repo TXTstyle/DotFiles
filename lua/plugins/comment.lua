@@ -1,5 +1,6 @@
 return {
-    "numToStr/Comment.nvim",
+    "faergeek/Comment.nvim",
+    branch = "nvim-0.12-compatibility",
     opts = {
         ---Add a space b/w comment and the line
         padding = true,
